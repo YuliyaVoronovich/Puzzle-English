@@ -40,7 +40,8 @@
     "@typescript-eslint/explicit-function-return-type": "error",
     "@typescript-eslint/consistent-type-exports": "error",
     "@typescript-eslint/consistent-type-imports": "error",
-    "@stylistic/ts/indent": "error",
-    "class-methods-use-this": "off"
+    "@stylistic/ts/indent": ["error", 2],
+    "class-methods-use-this": "off",
+    "indent": "off"
   }
 }
