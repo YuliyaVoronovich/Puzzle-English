@@ -19,10 +19,14 @@ export default class BaseComponent {
     this.node.append(child.getNode());
   }
 
-  protected appendChildren(children: BaseComponent[]): void {
+  public appendChildren(children: BaseComponent[]): void {
     children.forEach((child) => {
       this.append(child);
     });
+  }
+
+  public after(child: BaseComponent): void {
+    this.node.after(child.getNode());
   }
 
   public getNode(): HTMLElement {
@@ -51,6 +55,10 @@ export default class BaseComponent {
 
   public addClass(className: string): void {
     this.node.classList.add(className);
+  }
+
+  public removeClass(className: string): void {
+    this.node.classList.remove(className);
   }
 
   public toggleClass(className: string): void {

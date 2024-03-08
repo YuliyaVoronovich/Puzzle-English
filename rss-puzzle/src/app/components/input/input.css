@@ -1,0 +1,35 @@
+.form-input {
+  padding: 10px 30px;
+
+  font-size: 22px;
+  color: #04041c;
+
+  background-clip: padding-box;
+  border: 1px solid #ced4da;
+  border-radius: 0.25rem;
+  box-shadow: 1px 3px 12px 5px #ddd;
+}
+
+.form-input::placeholder {
+  color: #d3d2d7;
+}
+
+.form-input:focus {
+  border-color: #80bdff;
+  outline: 0;
+  box-shadow: 0 0 0 0.2rem rgb(0 123 255 / 25%);
+}
+
+.error {
+  display: none;
+  margin-top: -10px;
+  font-size: 10px;
+  color: red;
+}
+
+.error.show {
+  display: block;
+  margin-top: -10px;
+  font-size: 10px;
+  color: red;
+}

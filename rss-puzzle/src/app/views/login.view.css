@@ -1,0 +1,11 @@
+.form-login {
+  width: 100%;
+  max-width: 350px;
+  margin: auto;
+}
+
+.form-inputs-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
