@@ -3,16 +3,11 @@ import BaseComponent from '../components/base-component';
 import Input from '../components/input/input';
 import Button from '../components/button/button';
 import { validationServise } from '../servises/validation.servise';
-import type { TypeMessage } from '../types/types';
 
 export default class LoginView extends BaseComponent {
   private inputName: BaseComponent;
 
-  private inputNameValue: string | undefined;
-
   private inputSurname: BaseComponent;
-
-  private inputSurnameValue: string | undefined;
 
   private buttonEnter: BaseComponent;
 
@@ -20,16 +15,23 @@ export default class LoginView extends BaseComponent {
 
   private messageErrorTextSurname: BaseComponent;
 
+  private checkValidation = {
+    Name: false,
+    Surname: false,
+  };
+
   constructor() {
     super({ tagName: 'form', className: 'form-login' });
     this.inputName = new Input({
       type: 'input',
       classNameInput: 'form-input',
+      name: 'Name',
       placeholder: 'Name',
-      onInput: (event): void => {
-        if (event.currentTarget instanceof HTMLInputElement) {
-          this.inputNameValue = event.currentTarget.value;
-          this.checkEmptyValue(event.currentTarget.value, this.messageErrorTextName);
+      onInput: (element): void => {
+        if (element.currentTarget instanceof HTMLInputElement) {
+          const result = this.checkValid(element.currentTarget, this.messageErrorTextName);
+          const name = 'Name';
+          this.checkValidation[name] = result;
           this.checkButton();
         }
       },
@@ -39,11 +41,13 @@ export default class LoginView extends BaseComponent {
     this.inputSurname = new Input({
       type: 'input',
       classNameInput: 'form-input',
+      name: 'Surname',
       placeholder: 'Surname',
-      onInput: (event): void => {
-        if (event.currentTarget instanceof HTMLInputElement) {
-          this.inputSurnameValue = event.currentTarget.value;
-          this.checkEmptyValue(event.currentTarget.value, this.messageErrorTextSurname);
+      onInput: (element): void => {
+        if (element.currentTarget instanceof HTMLInputElement) {
+          const result = this.checkValid(element.currentTarget, this.messageErrorTextSurname);
+          const name = 'Surname';
+          this.checkValidation[name] = result;
           this.checkButton();
         }
       },
@@ -81,26 +85,29 @@ export default class LoginView extends BaseComponent {
     });
   }
 
-  private checkEmptyValue(value: string, input: BaseComponent): void {
-    const result = validationServise.isNotEmpty(value);
+  private checkValid(target: HTMLInputElement, errorElement: BaseComponent): boolean {
+    const result = validationServise.isValidField(target);
     if (result.ok) {
-      input.removeClass('show');
+      errorElement.removeClass('show');
+      return true;
     }
     if (result.error) {
-      this.showErrorMessage(result.error.message, input);
+      this.showErrorMessage(result.error?.message, errorElement);
     }
+    return false;
   }
 
-  private showErrorMessage(error: TypeMessage, input: BaseComponent): void {
-    input.toggleClass('show');
-    input.setTextContent(error);
+  private showErrorMessage(error: string, errorElement: BaseComponent): void {
+    errorElement.addClass('show');
+    errorElement.setTextContent(error);
   }
 
   private checkButton(): void {
-    if (this.inputNameValue && this.inputSurnameValue) {
-      this.buttonEnter.removeClass('disabled');
-    } else {
+    const result = Object.values(this.checkValidation).every((item) => item === true);
+    if (!result) {
       this.buttonEnter.addClass('disabled');
+    } else {
+      this.buttonEnter.removeClass('disabled');
     }
   }
 }

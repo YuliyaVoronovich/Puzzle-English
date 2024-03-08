@@ -4,6 +4,7 @@ import BaseComponent from '../base-component';
 interface IInput {
   type: string;
   classNameInput: string;
+  name: string;
   placeholder?: string;
   value?: string | number;
   onInput?: (e: Event) => void;
@@ -12,19 +13,20 @@ interface IInput {
 export default class Input extends BaseComponent {
   private onInput;
 
-  constructor({ type, classNameInput, placeholder, value, onInput }: IInput) {
+  constructor({ type, classNameInput, name, placeholder, value, onInput }: IInput) {
     super({
       tagName: 'input',
       className: classNameInput,
     });
     if (onInput) {
       this.onInput = onInput;
-      this.addListener('input', onInput);
+      this.addListener('change', onInput);
     }
-    this.setAttributes(type, placeholder, value);
+    this.setAttributes(type, name, placeholder, value);
   }
 
-  private setAttributes(type: string, placeholder?: string, value?: string | number): void {
+  private setAttributes(type: string, name: string, placeholder?: string, value?: string | number): void {
+    this.setAttribute('name', name);
     this.setAttribute('type', type);
     if (placeholder) {
       this.setAttribute('placeholder', placeholder);

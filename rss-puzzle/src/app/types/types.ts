@@ -1,12 +1,6 @@
-export type StatusErrorEmpty = {
+export type StatusError = {
   ok: true | false;
   error?: {
-    message: TypeMessage;
+    message: string;
   };
 };
-
-export type TypeMessage =
-  | 'Field is empty'
-  | 'Field length less 3'
-  | 'Field length less 4'
-  | 'Only letters A-z and hyphen';
