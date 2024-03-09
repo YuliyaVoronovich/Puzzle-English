@@ -20,6 +20,5 @@ export default class Button extends BaseComponent {
       this.onClick = onClick;
       this.addListener('click', onClick);
     }
-    this.addClass('disabled');
   }
 }

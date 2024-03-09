@@ -4,3 +4,8 @@ export type StatusError = {
     message: string;
   };
 };
+
+export interface User {
+  name: string;
+  surname: string;
+}

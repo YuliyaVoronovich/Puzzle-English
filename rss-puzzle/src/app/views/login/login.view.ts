@@ -1,9 +1,9 @@
 import './login.view.css';
-import BaseComponent from '../components/base-component';
-import Input from '../components/input/input';
-import Button from '../components/button/button';
-import { ValidationServise } from '../servises/validation.servise';
-import { LocalStorageServise } from '../servises/local-storage.servise';
+import BaseComponent from '../../components/base-component';
+import Input from '../../components/input/input';
+import Button from '../../components/button/button';
+import { ValidationServise } from '../../servises/validation.servise';
+import { LocalStorageServise } from '../../servises/local-storage.servise';
 
 export default class LoginView extends BaseComponent {
   private inputName: BaseComponent;
@@ -58,6 +58,7 @@ export default class LoginView extends BaseComponent {
     this.messageErrorTextSurname = new BaseComponent({ tagName: 'span', className: 'error' });
 
     this.buttonEnter = this.createButton();
+    this.buttonEnter.addClass('disabled');
     this.viewWrapper();
   }
 
@@ -114,10 +115,10 @@ export default class LoginView extends BaseComponent {
 
   private saveDataToLocalStorage(event: Event): void {
     event.preventDefault();
-    const nameUser = this.inputName.getAttribute('value');
-    const surnameUser = this.inputSurname.getAttribute('value');
-    if (nameUser && surnameUser) {
-      LocalStorageServise.setUser(nameUser, surnameUser);
+    const name = this.inputName.getAttribute('value');
+    const surname = this.inputSurname.getAttribute('value');
+    if (name && surname) {
+      LocalStorageServise.setItem('user', { name, surname });
     }
   }
 }
