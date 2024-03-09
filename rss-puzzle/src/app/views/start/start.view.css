@@ -37,6 +37,14 @@
   letter-spacing: 1.2px;
 }
 
+.page-button {
+  margin: auto auto 30px;
+}
+
+.page-button:hover {
+  scale: 1.2;
+}
+
 .page-sticker {
   position: absolute;
   top: 20px;

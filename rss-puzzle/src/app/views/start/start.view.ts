@@ -1,5 +1,6 @@
 import './start.view.css';
 import BaseComponent from '../../components/base-component';
+import Button from '../../components/button/button';
 import { LocalStorageServise } from '../../servises/local-storage.servise';
 
 export default class StartView extends BaseComponent {
@@ -16,8 +17,18 @@ export default class StartView extends BaseComponent {
       textContent:
         'Collect puzzles and learn English! Make unique offers and discover amazing pictures! Click and drag small pieces onto the field and gradually reveal fragments of the picture. If you encounter any difficulties, use the hints. Enjoy relaxing puzzles to train your brain and improve your language level!',
     });
+    const buttonEnter = this.createButton();
+    buttonEnter.addClass('page-button');
     const stiker = this.createSicker();
-    this.appendChildren([pageTitle, pageText, stiker]);
+    this.appendChildren([pageTitle, pageText, buttonEnter, stiker]);
+  }
+
+  private createButton(): BaseComponent {
+    return new Button({
+      className: 'form-button',
+      textContent: 'START',
+      onClick: (): void => {},
+    });
   }
 
   private createSicker(): BaseComponent {
@@ -36,7 +47,6 @@ export default class StartView extends BaseComponent {
 
   private createGreeting(): string {
     const user = LocalStorageServise.getUser('user');
-    console.log(user);
     if (user) {
       return `Hello, ${user.name} ${user.surname}!`;
     }
