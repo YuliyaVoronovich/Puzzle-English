@@ -36,3 +36,37 @@
   text-indent: 30px;
   letter-spacing: 1.2px;
 }
+
+.page-sticker {
+  position: absolute;
+  top: 20px;
+  left: 10px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 100%;
+  max-width: 400px;
+  min-height: 100px;
+  padding: 0 10px;
+
+  font-size: 26px;
+  color: #385764;
+
+  background: rgb(213 226 234 / 80%);
+  box-shadow: 0 0 15px #607683;
+
+  animation: show;
+  animation-duration: 4s;
+}
+
+@keyframes show {
+  from {
+    transform: scale(0.5, 0.5);
+  }
+
+  to {
+    transform: scale(1, 1);
+  }
+}
