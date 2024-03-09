@@ -49,4 +49,4 @@ class Validation {
     return length !== undefined && target.value.length >= length;
   }
 }
-export const validationServise = new Validation();
+export const ValidationServise = new Validation();

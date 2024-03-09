@@ -2,7 +2,8 @@ import './login.view.css';
 import BaseComponent from '../components/base-component';
 import Input from '../components/input/input';
 import Button from '../components/button/button';
-import { validationServise } from '../servises/validation.servise';
+import { ValidationServise } from '../servises/validation.servise';
+import { LocalStorageServise } from '../servises/local-storage.servise';
 
 export default class LoginView extends BaseComponent {
   private inputName: BaseComponent;
@@ -29,6 +30,7 @@ export default class LoginView extends BaseComponent {
       placeholder: 'Name',
       onInput: (element): void => {
         if (element.currentTarget instanceof HTMLInputElement) {
+          this.inputName.setAttribute('value', element.currentTarget.value);
           const result = this.checkValid(element.currentTarget, this.messageErrorTextName);
           const name = 'Name';
           this.checkValidation[name] = result;
@@ -45,6 +47,7 @@ export default class LoginView extends BaseComponent {
       placeholder: 'Surname',
       onInput: (element): void => {
         if (element.currentTarget instanceof HTMLInputElement) {
+          this.inputSurname.setAttribute('value', element.currentTarget.value);
           const result = this.checkValid(element.currentTarget, this.messageErrorTextSurname);
           const name = 'Surname';
           this.checkValidation[name] = result;
@@ -77,16 +80,14 @@ export default class LoginView extends BaseComponent {
     return new Button({
       className: 'form-button',
       textContent: 'LOGIN',
-      onClick: (value): void => {
-        if (value.currentTarget instanceof HTMLInputElement) {
-          console.log('ok');
-        }
+      onClick: (event): void => {
+        this.saveDataToLocalStorage(event);
       },
     });
   }
 
   private checkValid(target: HTMLInputElement, errorElement: BaseComponent): boolean {
-    const result = validationServise.isValidField(target);
+    const result = ValidationServise.isValidField(target);
     if (result.ok) {
       errorElement.removeClass('show');
       return true;
@@ -108,6 +109,15 @@ export default class LoginView extends BaseComponent {
       this.buttonEnter.addClass('disabled');
     } else {
       this.buttonEnter.removeClass('disabled');
+    }
+  }
+
+  private saveDataToLocalStorage(event: Event): void {
+    event.preventDefault();
+    const nameUser = this.inputName.getAttribute('value');
+    const surnameUser = this.inputSurname.getAttribute('value');
+    if (nameUser && surnameUser) {
+      LocalStorageServise.setUser(nameUser, surnameUser);
     }
   }
 }

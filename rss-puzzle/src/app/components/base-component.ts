@@ -49,6 +49,10 @@ export default class BaseComponent {
     this.node.innerHTML = html;
   }
 
+  public getAttribute(attribute: string): string | null {
+    return this.node.getAttribute(attribute);
+  }
+
   public removeAttribute(attribute: string): void {
     this.node.removeAttribute(attribute);
   }
