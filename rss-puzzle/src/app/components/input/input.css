@@ -21,15 +21,15 @@
 }
 
 .error {
-  display: none;
   margin-top: -10px;
   font-size: 10px;
   color: red;
+  visibility: hidden;
 }
 
 .error.show {
-  display: block;
   margin-top: -10px;
   font-size: 10px;
   color: red;
+  visibility: visible;
 }

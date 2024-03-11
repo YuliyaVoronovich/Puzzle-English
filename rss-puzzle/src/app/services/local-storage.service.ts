@@ -31,8 +31,16 @@ class LocalStorage {
     throw new Error('unknown value stored with key user');
   }
 
+  public checkUser(key: string): boolean {
+    return !!LocalStorage.getItem(`${LocalStoragePrefix}_${key}`);
+  }
+
   private static isUser(value: unknown): value is User {
     return Boolean(value) && typeof value === 'object';
+  }
+
+  public deleteData(key: string): void {
+    localStorage.removeItem(`${LocalStoragePrefix}_${key}`);
   }
 }
 export const LocalStorageServise = new LocalStorage();

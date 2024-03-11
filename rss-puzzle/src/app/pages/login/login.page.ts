@@ -1,9 +1,9 @@
-import './login.view.css';
+import './login.page.css';
 import BaseComponent from '../../components/base-component';
 import Input from '../../components/input/input';
 import Button from '../../components/button/button';
-import { ValidationServise } from '../../servises/validation.servise';
-import { LocalStorageServise } from '../../servises/local-storage.servise';
+import { ValidationServise } from '../../services/validation.service';
+import { LocalStorageServise } from '../../services/local-storage.service';
 
 export default class LoginView extends BaseComponent {
   private inputName: BaseComponent;
@@ -82,7 +82,9 @@ export default class LoginView extends BaseComponent {
       className: 'form-button',
       textContent: 'LOGIN',
       onClick: (event): void => {
+        event.preventDefault();
         this.saveDataToLocalStorage(event);
+        document.location.href = `/rss-puzzle/welcome`;
       },
     });
   }

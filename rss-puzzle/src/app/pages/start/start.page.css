@@ -39,6 +39,7 @@
 
 .page-button {
   margin: auto auto 30px;
+  transition: 0.5s;
 }
 
 .page-button:hover {
@@ -77,4 +78,24 @@
   to {
     transform: scale(1, 1);
   }
+}
+
+.button-logout {
+  cursor: pointer;
+
+  position: absolute;
+  top: 20px;
+  right: 10px;
+
+  padding: 10px;
+
+  color: antiquewhite;
+
+  background: #385764;
+
+  transition: 0.5s;
+}
+
+.button-logout:hover {
+  scale: 1.2;
 }

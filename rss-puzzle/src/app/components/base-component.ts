@@ -96,4 +96,9 @@ export default class BaseComponent {
     this.destroyChildren();
     this.node.remove();
   }
+
+  public replaceChild(child: BaseComponent): void {
+    this.destroyChildren();
+    this.node.append(child.getNode());
+  }
 }

@@ -1,18 +1,20 @@
 import './style.css';
 import BaseComponent from './components/base-component';
-// import LoginView from './views/login/login.view';
-import StartView from './views/start/start.view';
+import Router from './router/router';
+import View from './pages/page';
 
 export default class Controller extends BaseComponent {
-  private view: BaseComponent;
+  private router: Router;
 
   constructor() {
-    super({
-      tagName: 'div',
-      className: 'container',
-    });
-    // this.view = new LoginView(); // load different view future
-    this.view = new StartView();
-    this.append(this.view);
+    const routerOutlet = new View();
+    super(
+      {
+        tagName: 'div',
+        className: 'container',
+      },
+      routerOutlet,
+    );
+    this.router = new Router(routerOutlet);
   }
 }
