@@ -15,17 +15,17 @@ export default class Router {
     const arrayPath = window.location.pathname.split('/');
     const pathname = arrayPath[arrayPath.length - 1];
 
-    let location;
+    let currentPath;
     if (!isUser) {
-      location = '/';
+      currentPath = '/';
     } else if (!pathname) {
-      location = '/welcome';
+      currentPath = '/welcome';
     } else {
-      location = `/${pathname}`;
+      currentPath = `/${pathname}`;
     }
     window.history.pushState({}, '', pathname);
 
-    this.setViewContent(location)
+    this.setViewContent(currentPath)
       .then((data) => {
         this.routerOutlet.setContent(data);
       })
@@ -35,15 +35,15 @@ export default class Router {
   private setViewContent = async (location: string): Promise<BaseComponent> => {
     switch (location) {
       case '/welcome': {
-        const { default: Start } = await import('../pages/start/start.page');
+        const { default: Start } = await import('../pages/start/start-page');
         return new Start();
       }
-      // case '/game': {
-      //   const {default: Start} = await import ("../views/game/game.page");
-      //   return new Game();
-      // }
+      case '/game': {
+        const { default: Game } = await import('../pages/game/game-page');
+        return new Game();
+      }
       default: {
-        const { default: Login } = await import('../pages/login/login.page');
+        const { default: Login } = await import('../pages/login/login-page');
         return new Login();
       }
     }

@@ -1,9 +1,9 @@
-import './start.page.css';
+import './start.css';
 import BaseComponent from '../../components/base-component';
 import Button from '../../components/button/button';
 import { LocalStorageServise } from '../../services/local-storage.service';
 
-export default class StartView extends BaseComponent {
+export default class StartPage extends BaseComponent {
   constructor() {
     super({ tagName: 'div', className: 'page-wrapper' });
     const pageTitle = new BaseComponent({
@@ -19,14 +19,13 @@ export default class StartView extends BaseComponent {
     });
     const buttonEnter = this.createButtonStart();
     const buttonLogout = this.createButtonLogout();
-    buttonEnter.addClass('page-button');
     const stiker = this.createSicker();
     this.appendChildren([pageTitle, pageText, buttonEnter, stiker, buttonLogout]);
   }
 
   private createButtonStart(): BaseComponent {
     return new Button({
-      className: 'form-button',
+      className: 'form-button page-button',
       textContent: 'START',
       onClick: (): void => {
         document.location.href = `/rss-puzzle/game`;
@@ -42,6 +41,7 @@ export default class StartView extends BaseComponent {
         event.preventDefault();
         LocalStorageServise.deleteData('user');
         document.location.href = `/rss-puzzle/`;
+        window.history.pushState({}, '', '/');
       },
     });
   }

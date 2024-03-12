@@ -1,11 +1,11 @@
-import './login.page.css';
+import './login.css';
 import BaseComponent from '../../components/base-component';
 import Input from '../../components/input/input';
 import Button from '../../components/button/button';
 import { ValidationServise } from '../../services/validation.service';
 import { LocalStorageServise } from '../../services/local-storage.service';
 
-export default class LoginView extends BaseComponent {
+export default class LoginPage extends BaseComponent {
   private inputName: BaseComponent;
 
   private inputSurname: BaseComponent;
@@ -58,7 +58,6 @@ export default class LoginView extends BaseComponent {
     this.messageErrorTextSurname = new BaseComponent({ tagName: 'span', className: 'error' });
 
     this.buttonEnter = this.createButton();
-    this.buttonEnter.addClass('disabled');
     this.viewWrapper();
   }
 
@@ -79,7 +78,7 @@ export default class LoginView extends BaseComponent {
 
   private createButton(): BaseComponent {
     return new Button({
-      className: 'form-button',
+      className: 'form-button disabled',
       textContent: 'LOGIN',
       onClick: (event): void => {
         event.preventDefault();

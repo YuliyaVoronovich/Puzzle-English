@@ -1,0 +1,32 @@
+.game-line {
+  display: flex;
+  flex-direction: row;
+  gap: 2px;
+  margin-top: 30px;
+}
+.card {
+  width: 100px;
+  height: 40px;
+  position: relative;
+  display: flex;
+  text-align: center;
+  color: #cbeb2b;
+  background: #adced2;
+  text-shadow:
+    1px 1px 2px black,
+    0 0 1em black,
+    0 0 0.2em black;
+  font-weight: 400;
+  font-size: 18px;
+  cursor: pointer;
+}
+
+.card:hover {
+  border: 1px solid rgb(235, 133, 133);
+}
+
+.word {
+  flex-grow: 1;
+  width: 100%;
+  padding: 8px 10px;
+}

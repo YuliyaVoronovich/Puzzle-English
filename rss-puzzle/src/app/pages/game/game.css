@@ -1,0 +1,17 @@
+.page-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 50px;
+}
+
+.game-field {
+  width: 800px;
+  height: 400px;
+  background: rgb(228 228 196);
+}
+
+.game-line {
+  width: 800px;
+  height: 40px;
+  background: rgb(219 219 190);
+}

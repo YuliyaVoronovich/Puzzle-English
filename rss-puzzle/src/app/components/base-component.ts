@@ -19,6 +19,10 @@ export default class BaseComponent {
     this.node.append(child.getNode());
   }
 
+  public appendHtmlElement(child: HTMLElement): void {
+    this.node.append(child);
+  }
+
   public appendChildren(children: BaseComponent[]): void {
     children.forEach((child) => {
       this.append(child);
