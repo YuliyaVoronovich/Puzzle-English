@@ -1,17 +1,27 @@
-.page-wrapper {
+.game-wrapper {
   display: flex;
   flex-direction: column;
-  gap: 50px;
+  align-self: center;
+
+  width: 700px;
+  margin: 40px auto 0;
 }
 
 .game-field {
-  width: 800px;
-  height: 400px;
-  background: rgb(228 228 196);
+  width: 100%;
+  height: auto;
+
+  /* background-color: rgb(241, 241, 201); */
+  background-size: 700px auto;
+}
+
+.field-line {
+  flex-wrap: nowrap;
+  width: 40px;
+  margin: 0;
 }
 
 .game-line {
-  width: 800px;
   height: 40px;
   background: rgb(219 219 190);
 }
