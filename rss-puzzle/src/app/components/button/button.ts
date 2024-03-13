@@ -8,8 +8,6 @@ interface IButton {
 }
 
 export default class Button extends BaseComponent {
-  private onClick;
-
   constructor({ className, textContent, onClick }: IButton) {
     super({
       tagName: 'button',
@@ -17,7 +15,6 @@ export default class Button extends BaseComponent {
       textContent,
     });
     if (onClick) {
-      this.onClick = onClick;
       this.addListener('click', onClick);
     }
   }

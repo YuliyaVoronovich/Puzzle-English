@@ -11,17 +11,31 @@
   width: 100%;
   height: auto;
 
-  /* background-color: rgb(241, 241, 201); */
+  background-color: rgb(241, 241, 201);
   background-size: 700px auto;
 }
 
 .field-line {
+  height: 40px;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
   flex-wrap: nowrap;
-  width: 40px;
+  height: 40px;
   margin: 0;
 }
 
 .game-line {
-  height: 40px;
+  gap: 1px;
   background: rgb(219 219 190);
+  align-items: center;
+  justify-content: center;
+}
+
+.game-line-card {
+  width: 40px;
+  height: 40px;
+  border: 1px solid #e0dada;
+  border-radius: 5px;
 }

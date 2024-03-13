@@ -1,7 +1,7 @@
 .game-line {
   display: flex;
   flex-direction: row;
-  gap: 2px;
+  gap: 0;
   margin-top: 30px;
 }
 
@@ -25,6 +25,9 @@
     0 0 0.2em black;
 
   background: #2cc4d5;
+  outline: 1px solid rgb(180 158 158);
+
+  transition: 0.5s;
 }
 
 .card:hover {
@@ -35,4 +38,11 @@
   flex-grow: 1;
   width: 100%;
   padding: 8px 10px;
+}
+
+.show-empty-card {
+  width: 40px;
+  height: 40px;
+  border: 1px solid #676363;
+  border-radius: 5px;
 }

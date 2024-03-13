@@ -1,9 +1,9 @@
 import { DataServise } from './data.service';
 
 class Settings {
-  private currentIndexPicture = 8;
+  private currentIndexPicture = 0;
 
-  private currentIndexPhrase = 2;
+  private currentIndexPhrase = 0;
 
   public widthPicture = 700;
 
@@ -13,7 +13,7 @@ class Settings {
 
   private countIndent = 2;
 
-  private widthGap = 2;
+  private widthGap = 0;
 
   private countLines = 10;
 
@@ -47,18 +47,12 @@ class Settings {
     this.widthIndent = indent;
   }
 
-  public numWordsInPhrase(): number {
-    return this.phrase.split(' ').length;
+  public numWordsInPhrase(indexPhrase: number = this.currentIndexPhrase): number {
+    return DataServise.dataRounds[this.currentIndexPicture].words[indexPhrase].textExample.split(' ').length;
   }
 
   public numSymbolsInPhrase(): number {
     return this.phrase.split(' ').join('').length;
-  }
-
-  public heigthLine(): void {
-    const img = new Image();
-    img.src = `src/app/data/images/${this.mainPicture}`;
-    this.heigthOfLine = ((700 / img.width) * img.height) / this.countLines;
   }
 
   public widthCard(word: string): number {

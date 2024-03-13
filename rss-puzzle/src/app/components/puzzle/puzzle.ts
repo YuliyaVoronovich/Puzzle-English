@@ -4,7 +4,7 @@ import BaseComponent from '../base-component';
 export default class Puzzle extends BaseComponent {
   private onClick;
 
-  constructor(word: string, index: number, width: number, onClick: (event: Event) => void) {
+  constructor(word: string, index: number, width: number, height: number, onClick: (event: Event) => void) {
     const cardBlock = new BaseComponent(
       {
         tagName: 'div',
@@ -22,7 +22,11 @@ export default class Puzzle extends BaseComponent {
         }),
       ),
     );
-    cardBlock.setAttribute('style', `width:${width}px`);
+    let heightPuzzle = '';
+    if (height) {
+      heightPuzzle = `height:${height}px`;
+    }
+    cardBlock.setAttribute('style', `width:${width}px;${heightPuzzle}`);
     super(
       {
         tagName: 'div',

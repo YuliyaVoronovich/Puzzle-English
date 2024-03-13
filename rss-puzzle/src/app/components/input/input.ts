@@ -11,15 +11,12 @@ interface IInput {
 }
 
 export default class Input extends BaseComponent {
-  private onInput;
-
   constructor({ type, classNameInput, name, placeholder, value, onInput }: IInput) {
     super({
       tagName: 'input',
       className: classNameInput,
     });
     if (onInput) {
-      this.onInput = onInput;
       this.addListener('change', onInput);
     }
     this.setAttributes(type, name, placeholder, value);
