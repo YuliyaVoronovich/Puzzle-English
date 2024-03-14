@@ -1,15 +1,14 @@
 export default class BaseComponent {
   protected node: HTMLElement;
 
-  private children: BaseComponent[];
+  private children: BaseComponent[] = [];
 
   constructor({ tagName = 'div', className = '', textContent = '' }, ...children: BaseComponent[]) {
     this.node = document.createElement(tagName);
     this.node.className = className;
     this.node.textContent = textContent;
-    this.children = children;
 
-    if (children) {
+    if (children.length) {
       this.appendChildren(children);
     }
   }
@@ -101,8 +100,12 @@ export default class BaseComponent {
     this.node.remove();
   }
 
+  public removeChild(child: BaseComponent): void {
+    this.children = this.children.filter((item) => item !== child);
+  }
+
   public replaceChild(child: BaseComponent): void {
     this.destroyChildren();
-    this.node.append(child.getNode());
+    this.append(child);
   }
 }

@@ -1,16 +1,19 @@
 import './game.css';
+import Button from '../../components/button/button';
 import BaseComponent from '../../components/base-component';
 import Puzzle from '../../components/puzzle/puzzle';
 import { SettingsServise } from '../../services/settings.service';
 
 export default class GamePage extends BaseComponent {
-  private numLineOpen = 0;
-
   private fieldPicture: BaseComponent;
 
   private fieldLines: BaseComponent[] = [];
 
   private linePuzzles: BaseComponent;
+
+  private gameLine: BaseComponent | undefined;
+
+  private buttonContinue: BaseComponent;
 
   constructor() {
     super({ tagName: 'div', className: 'game-wrapper' });
@@ -20,7 +23,8 @@ export default class GamePage extends BaseComponent {
     //   `background-image: url(src/app/data/images/${SettingsServise.mainPicture})`,
     // );
     this.linePuzzles = this.createLinePuzzles();
-    this.appendChildren([this.fieldPicture, this.linePuzzles]);
+    this.buttonContinue = this.createButtonContinue();
+    this.appendChildren([this.fieldPicture, this.linePuzzles, this.buttonContinue]);
   }
 
   private createFieldPicture(): BaseComponent {
@@ -34,24 +38,23 @@ export default class GamePage extends BaseComponent {
   }
 
   private createLinePuzzles(): BaseComponent {
-    const phrase = SettingsServise.currentPhrase;
-    return new BaseComponent(
+    this.gameLine = new BaseComponent(
       {
         tagName: 'div',
         className: 'game-line',
       },
-      ...this.generatePuzzles(phrase),
+      ...this.generatePuzzles(),
     );
+    return this.gameLine;
   }
 
-  private generatePuzzles(phrase: string): Puzzle[] {
+  private generatePuzzles(): Puzzle[] {
+    const phrase = SettingsServise.currentPhrase(SettingsServise.currentIndexPhrase);
     return phrase
       .split(' ')
       .map(
         (word, index) =>
-          new Puzzle(word, index, SettingsServise.widthCard(word), SettingsServise.heigthOfLine, (event) =>
-            this.clickPuzzle(event),
-          ),
+          new Puzzle(word, index, SettingsServise.widthCard(word), SettingsServise.heigthOfLine, this.clickPuzzle),
       )
       .sort(() => Math.random() - 0.5);
   }
@@ -76,47 +79,81 @@ export default class GamePage extends BaseComponent {
     for (let i = 0; i < SettingsServise.numWordsInPhrase(index); i += 1) {
       const tile = new BaseComponent({
         tagName: 'div',
-        className: 'tile-card',
+        className: 'tile-card empty-card',
+      });
+      tile.addListener('click', () => {
+        this.clickPuzzleLine(tile);
       });
       fieldTilesOfLine.push(tile);
-      tile.addListener('click', (event) => this.clickPuzzle(event));
     }
     return fieldTilesOfLine;
   }
 
-  public clickPuzzle(event: Event): void {
-    if (event.currentTarget instanceof HTMLElement && event.currentTarget.parentNode instanceof HTMLElement) {
-      if (event.currentTarget.parentNode.classList.contains('game-line')) {
-        const array: BaseComponent[] = Array.from(this.fieldLines[this.numLineOpen].getChildren());
+  private createButtonContinue(): BaseComponent {
+    return new Button({
+      className: 'form-button game-button disabled',
+      textContent: 'Continue',
+      onClick: (e): void => {
+        e.preventDefault();
+        this.moveToNextRound();
+      },
+    });
+  }
 
-        for (let i = 0; i < this.fieldLines[0].getChildren().length; i += 1) {
-          if (array[i].getNode().childElementCount === 0) {
-            const element = event.currentTarget.children[0];
-            array[i].setAttribute('style', `${element.getAttribute('style')}`);
-            array[i].setAttribute('border', `none`);
-
-            if (element instanceof HTMLElement && element.parentNode instanceof HTMLElement) {
-              element.parentNode?.classList.add('show-empty-card');
-              array[i].appendHtmlElement(element);
-            }
-            break;
-          }
-        }
-      } else {
-        const array: BaseComponent[] = Array.from(this.linePuzzles.getChildren());
-        for (let i = 0; i < this.linePuzzles.getChildren().length; i += 1) {
-          if (array[i].getNode().childElementCount === 0) {
-            const element = event.currentTarget.children[0];
-            array[i].removeClass('show-empty-card');
-            element.classList.remove('show-empty-card');
-
-            if (element instanceof HTMLElement && element.parentNode instanceof HTMLElement) {
-              array[i].appendHtmlElement(element);
-            }
-            break;
-          }
+  public clickPuzzleLine = (tile: BaseComponent): void => {
+    const element = tile.getNode().children[0];
+    if (element) {
+      for (let i = 0; i < this.linePuzzles.getNode().children.length; i += 1) {
+        if (this.linePuzzles.getNode().children[i].classList.contains('show-empty-card')) {
+          this.linePuzzles.getNode().children[i].append(element);
+          this.linePuzzles.getNode().children[i].classList.remove('show-empty-card');
+          tile.getNode().classList.add('empty-card');
+          tile.getNode().removeAttribute('style');
+          break;
         }
       }
+    }
+  };
+
+  public clickPuzzle = (element: HTMLElement): void => {
+    const card = element.children[0];
+    const arrayTiles: HTMLCollection = this.fieldLines[SettingsServise.currentIndexPhrase].getNode().children;
+    for (let i = 0; i < arrayTiles.length; i += 1) {
+      if (arrayTiles[i].classList.contains('empty-card')) {
+        arrayTiles[i].setAttribute('style', `${card.getAttribute('style')}`);
+        arrayTiles[i].setAttribute('border', `none`);
+        element.classList.add('show-empty-card');
+        arrayTiles[i].classList.remove('empty-card');
+        arrayTiles[i].append(card);
+        break;
+      }
+    }
+    this.checkPhrase(arrayTiles);
+  };
+
+  public checkPhrase(arrayTiles: HTMLCollection): void {
+    let resultPhrase = '';
+    for (let i = 0; i < arrayTiles.length; i += 1) {
+      resultPhrase += `${arrayTiles[i].textContent} `;
+    }
+    resultPhrase.trim();
+
+    if (resultPhrase.trim() === SettingsServise.currentPhrase(SettingsServise.currentIndexPhrase)) {
+      this.buttonContinue.removeClass('disabled');
+    }
+  }
+
+  public moveToNextRound(): void {
+    SettingsServise.currentIndexPhrase += 1;
+    if (this.gameLine) {
+      this.gameLine.getChildren().forEach((element) => {
+        if (element.getNode().classList.contains('show-empty-card')) {
+          this.gameLine?.removeChild(element);
+        }
+      });
+      this.gameLine.setHTML('');
+      this.gameLine.appendChildren(this.generatePuzzles());
+      this.buttonContinue.addClass('disabled');
     }
   }
 }

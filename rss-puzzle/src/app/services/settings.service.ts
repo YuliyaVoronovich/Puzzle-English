@@ -3,7 +3,7 @@ import { DataServise } from './data.service';
 class Settings {
   private currentIndexPicture = 0;
 
-  private currentIndexPhrase = 0;
+  public currentIndexPhrase = 0;
 
   public widthPicture = 700;
 
@@ -25,10 +25,8 @@ class Settings {
     this.heigthOfLine = ((this.widthPicture / img.width) * img.height) / this.countLines;
   }
 
-  private phrase = DataServise.dataRounds[this.currentIndexPicture].words[this.currentIndexPhrase].textExample;
-
-  public get currentPhrase(): string {
-    return this.phrase;
+  public currentPhrase(index: number = this.currentIndexPicture): string {
+    return DataServise.dataRounds[this.currentIndexPicture].words[index].textExample;
   }
 
   public get widthMainPicture(): number {
@@ -51,8 +49,8 @@ class Settings {
     return DataServise.dataRounds[this.currentIndexPicture].words[indexPhrase].textExample.split(' ').length;
   }
 
-  public numSymbolsInPhrase(): number {
-    return this.phrase.split(' ').join('').length;
+  public numSymbolsInPhrase(indexPhrase: number = this.currentIndexPhrase): number {
+    return DataServise.dataRounds[this.currentIndexPicture].words[indexPhrase].textExample.split(' ').join('').length;
   }
 
   public widthCard(word: string): number {

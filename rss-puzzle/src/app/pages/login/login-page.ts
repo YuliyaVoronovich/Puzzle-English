@@ -78,7 +78,7 @@ export default class LoginPage extends BaseComponent {
 
   private createButton(): BaseComponent {
     return new Button({
-      className: 'form-button disabled',
+      className: 'form-button login-button disabled',
       textContent: 'LOGIN',
       onClick: (event): void => {
         event.preventDefault();

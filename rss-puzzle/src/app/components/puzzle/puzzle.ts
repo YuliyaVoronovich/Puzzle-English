@@ -4,7 +4,7 @@ import BaseComponent from '../base-component';
 export default class Puzzle extends BaseComponent {
   private onClick;
 
-  constructor(word: string, index: number, width: number, height: number, onClick: (event: Event) => void) {
+  constructor(word: string, index: number, width: number, height: number, onClick: (element: HTMLElement) => void) {
     const cardBlock = new BaseComponent(
       {
         tagName: 'div',
@@ -36,7 +36,9 @@ export default class Puzzle extends BaseComponent {
     );
     this.onClick = onClick;
     if (this.onClick) {
-      this.addListener('click', this.onClick);
+      this.addListener('click', () => {
+        this.onClick(this.getNode());
+      });
     }
   }
 }
