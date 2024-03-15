@@ -31,6 +31,10 @@
   background: rgb(219 219 190);
 }
 
+.field-line.block {
+  pointer-events: none;
+}
+
 .game-line-card {
   width: 40px;
   height: 40px;
@@ -41,22 +45,21 @@
 .button-wrapper {
   display: flex;
   flex-direction: row;
-  gap: 10px;
   align-self: center;
   justify-content: center;
+
+  margin-top: 30px;
 }
 
 .game-button {
   width: 120px;
-  margin-top: 30px;
-
   visibility: visible;
   opacity: 1;
-
   transition: opacity 0.5s ease-in;
 }
 
 .game-button.hide {
+  width: 0;
   visibility: hidden;
   opacity: 0;
   transition: opacity 0.5s ease-in;

@@ -105,7 +105,7 @@ export default class GamePage extends BaseComponent {
 
   private createButtonContinue(): BaseComponent {
     return new Button({
-      className: 'form-button game-button disabled',
+      className: 'form-button game-button hide',
       textContent: 'Continue',
       onClick: (e): void => {
         e.preventDefault();
@@ -160,32 +160,39 @@ export default class GamePage extends BaseComponent {
 
   public checkPhraseFull(): void {
     const arrayTiles: HTMLCollection = this.fieldLines[SettingsServise.currentIndexPhrase].getNode().children;
-    let resultPhrase = '';
+    // let resultPhrase = '';
     let countWords = 0;
     for (let i = 0; i < arrayTiles.length; i += 1) {
       if (arrayTiles[i].textContent) {
-        resultPhrase += `${arrayTiles[i].textContent} `;
+        //  resultPhrase += `${arrayTiles[i].textContent} `;
         countWords += 1;
       }
     }
-    resultPhrase.trim();
+    // resultPhrase.trim();
 
     if (countWords === SettingsServise.numWordsInPhrase(SettingsServise.currentIndexPhrase)) {
-      if (resultPhrase.trim() === SettingsServise.currentPhrase(SettingsServise.currentIndexPhrase)) {
-        this.buttonContinue.removeClass('disabled');
-      }
       this.buttonCheck.removeClass('hide');
     }
   }
 
   public checkRightPhrase(): void {
     const arrayTiles: HTMLCollection = this.fieldLines[SettingsServise.currentIndexPhrase].getNode().children;
+    let resultPhrase = '';
     for (let i = 0; i < arrayTiles.length; i += 1) {
       if (Number(arrayTiles[i].children[0].getAttribute('data')) !== i) {
         arrayTiles[i].classList.add('error');
       } else {
         arrayTiles[i].classList.remove('error');
       }
+      if (arrayTiles[i].textContent) {
+        resultPhrase += `${arrayTiles[i].textContent} `;
+      }
+    }
+    resultPhrase.trim();
+    if (resultPhrase.trim() === SettingsServise.currentPhrase(SettingsServise.currentIndexPhrase)) {
+      this.buttonContinue.removeClass('hide');
+      this.buttonCheck.addClass('hide');
+      this.fieldLines[SettingsServise.currentIndexPhrase].addClass('block');
     }
   }
 
@@ -202,7 +209,7 @@ export default class GamePage extends BaseComponent {
       });
       this.gameLine.setHTML('');
       this.gameLine.appendChildren(this.generatePuzzles());
-      this.buttonContinue.addClass('disabled');
+      this.buttonContinue.addClass('hide');
       this.buttonCheck.addClass('hide');
     }
   }
