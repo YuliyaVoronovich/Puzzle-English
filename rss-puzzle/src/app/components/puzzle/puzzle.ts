@@ -27,6 +27,7 @@ export default class Puzzle extends BaseComponent {
       heightPuzzle = `height:${height}px`;
     }
     cardBlock.setAttribute('style', `width:${width}px;${heightPuzzle}`);
+
     super(
       {
         tagName: 'div',
@@ -34,6 +35,7 @@ export default class Puzzle extends BaseComponent {
       },
       cardBlock,
     );
+    cardBlock.setAttribute('data', `${index}`);
     this.onClick = onClick;
     if (this.onClick) {
       this.addListener('click', () => {

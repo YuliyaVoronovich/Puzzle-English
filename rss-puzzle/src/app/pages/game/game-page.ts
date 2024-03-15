@@ -15,6 +15,10 @@ export default class GamePage extends BaseComponent {
 
   private buttonContinue: BaseComponent;
 
+  private buttonCheck: BaseComponent;
+
+  private buttonWrapper: BaseComponent;
+
   constructor() {
     super({ tagName: 'div', className: 'game-wrapper' });
     this.fieldPicture = this.createFieldPicture();
@@ -24,7 +28,16 @@ export default class GamePage extends BaseComponent {
     // );
     this.linePuzzles = this.createLinePuzzles();
     this.buttonContinue = this.createButtonContinue();
-    this.appendChildren([this.fieldPicture, this.linePuzzles, this.buttonContinue]);
+    this.buttonCheck = this.createButtonCheck();
+    this.buttonWrapper = new BaseComponent(
+      {
+        tagName: 'div',
+        className: 'button-wrapper',
+      },
+      this.buttonContinue,
+      this.buttonCheck,
+    );
+    this.appendChildren([this.fieldPicture, this.linePuzzles, this.buttonWrapper]);
   }
 
   private createFieldPicture(): BaseComponent {
@@ -60,6 +73,7 @@ export default class GamePage extends BaseComponent {
   }
 
   private generateLinesOfField(): BaseComponent[] {
+    this.fieldLines = [];
     for (let i = 0; i < SettingsServise.countOfLines; i += 1) {
       const line = new BaseComponent(
         {
@@ -100,6 +114,17 @@ export default class GamePage extends BaseComponent {
     });
   }
 
+  private createButtonCheck(): BaseComponent {
+    return new Button({
+      className: 'form-button game-button hide',
+      textContent: 'Check',
+      onClick: (e): void => {
+        e.preventDefault();
+        this.checkRightPhrase();
+      },
+    });
+  }
+
   public clickPuzzleLine = (tile: BaseComponent): void => {
     const element = tile.getNode().children[0];
     if (element) {
@@ -109,10 +134,12 @@ export default class GamePage extends BaseComponent {
           this.linePuzzles.getNode().children[i].classList.remove('show-empty-card');
           tile.getNode().classList.add('empty-card');
           tile.getNode().removeAttribute('style');
+          tile.getNode().classList.remove('error');
           break;
         }
       }
     }
+    this.buttonCheck.addClass('hide');
   };
 
   public clickPuzzle = (element: HTMLElement): void => {
@@ -128,22 +155,44 @@ export default class GamePage extends BaseComponent {
         break;
       }
     }
-    this.checkPhrase(arrayTiles);
+    this.checkPhraseFull();
   };
 
-  public checkPhrase(arrayTiles: HTMLCollection): void {
+  public checkPhraseFull(): void {
+    const arrayTiles: HTMLCollection = this.fieldLines[SettingsServise.currentIndexPhrase].getNode().children;
     let resultPhrase = '';
+    let countWords = 0;
     for (let i = 0; i < arrayTiles.length; i += 1) {
-      resultPhrase += `${arrayTiles[i].textContent} `;
+      if (arrayTiles[i].textContent) {
+        resultPhrase += `${arrayTiles[i].textContent} `;
+        countWords += 1;
+      }
     }
     resultPhrase.trim();
 
-    if (resultPhrase.trim() === SettingsServise.currentPhrase(SettingsServise.currentIndexPhrase)) {
-      this.buttonContinue.removeClass('disabled');
+    if (countWords === SettingsServise.numWordsInPhrase(SettingsServise.currentIndexPhrase)) {
+      if (resultPhrase.trim() === SettingsServise.currentPhrase(SettingsServise.currentIndexPhrase)) {
+        this.buttonContinue.removeClass('disabled');
+      }
+      this.buttonCheck.removeClass('hide');
+    }
+  }
+
+  public checkRightPhrase(): void {
+    const arrayTiles: HTMLCollection = this.fieldLines[SettingsServise.currentIndexPhrase].getNode().children;
+    for (let i = 0; i < arrayTiles.length; i += 1) {
+      if (Number(arrayTiles[i].children[0].getAttribute('data')) !== i) {
+        arrayTiles[i].classList.add('error');
+      } else {
+        arrayTiles[i].classList.remove('error');
+      }
     }
   }
 
   public moveToNextRound(): void {
+    if (SettingsServise.currentIndexPhrase === SettingsServise.countOfLines - 1) {
+      this.moveToNextPicture();
+    }
     SettingsServise.currentIndexPhrase += 1;
     if (this.gameLine) {
       this.gameLine.getChildren().forEach((element) => {
@@ -154,6 +203,22 @@ export default class GamePage extends BaseComponent {
       this.gameLine.setHTML('');
       this.gameLine.appendChildren(this.generatePuzzles());
       this.buttonContinue.addClass('disabled');
+      this.buttonCheck.addClass('hide');
     }
+  }
+
+  public moveToNextPicture(): void {
+    SettingsServise.currentIndexPhrase = 0;
+    SettingsServise.currentIndexPicture += 1;
+    this.destroyChildren();
+    this.fieldPicture.destroyChildren();
+
+    this.fieldPicture = this.createFieldPicture();
+    // this.fieldPicture.setAttribute(
+    //   'style',
+    //   `background-image: url(src/app/data/images/${SettingsServise.currentMainPicture()})`,
+    // );
+    this.linePuzzles = this.createLinePuzzles();
+    this.appendChildren([this.fieldPicture, this.linePuzzles]);
   }
 }

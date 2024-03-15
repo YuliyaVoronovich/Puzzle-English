@@ -1,7 +1,7 @@
 import { DataServise } from './data.service';
 
 class Settings {
-  private currentIndexPicture = 0;
+  public currentIndexPicture = 0;
 
   public currentIndexPhrase = 0;
 
@@ -27,6 +27,10 @@ class Settings {
 
   public currentPhrase(index: number = this.currentIndexPicture): string {
     return DataServise.dataRounds[this.currentIndexPicture].words[index].textExample;
+  }
+
+  public currentMainPicture(index: number = this.currentIndexPicture): string {
+    return DataServise.dataRounds[index].levelData.imageSrc;
   }
 
   public get widthMainPicture(): number {
