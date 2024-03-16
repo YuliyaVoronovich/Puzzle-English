@@ -1,4 +1,5 @@
 import './game.css';
+import { LocalStorageServise } from '../../services/local-storage.service';
 import Button from '../../components/button/button';
 import BaseComponent from '../../components/base-component';
 import Puzzle from '../../components/puzzle/puzzle';
@@ -17,6 +18,8 @@ export default class GamePage extends BaseComponent {
 
   private buttonCheck: BaseComponent;
 
+  private buttonAutofill: BaseComponent;
+
   private buttonWrapper: BaseComponent;
 
   constructor() {
@@ -29,6 +32,7 @@ export default class GamePage extends BaseComponent {
     this.linePuzzles = this.createLinePuzzles();
     this.buttonContinue = this.createButtonContinue();
     this.buttonCheck = this.createButtonCheck();
+    this.buttonAutofill = this.createButtonAutofill();
     this.buttonWrapper = new BaseComponent(
       {
         tagName: 'div',
@@ -36,8 +40,9 @@ export default class GamePage extends BaseComponent {
       },
       this.buttonContinue,
       this.buttonCheck,
+      this.buttonAutofill,
     );
-    this.appendChildren([this.fieldPicture, this.linePuzzles, this.buttonWrapper]);
+    this.appendChildren([this.fieldPicture, this.linePuzzles, this.buttonWrapper, this.createButtonLogout()]);
   }
 
   private createFieldPicture(): BaseComponent {
@@ -65,10 +70,17 @@ export default class GamePage extends BaseComponent {
     const phrase = SettingsServise.currentPhrase(SettingsServise.currentIndexPhrase);
     return phrase
       .split(' ')
-      .map(
-        (word, index) =>
-          new Puzzle(word, index, SettingsServise.widthCard(word), SettingsServise.heigthOfLine, this.clickPuzzle),
-      )
+      .map((word, index: number) => {
+        return new Puzzle(
+          word,
+          index,
+          SettingsServise.widthCard(word),
+          SettingsServise.heigthOfLine,
+          /* SettingsServise.moveXPositions[index],
+          SettingsServise.moveYPositions[SettingsServise.currentIndexPhrase], */
+          this.clickPuzzle,
+        );
+      })
       .sort(() => Math.random() - 0.5);
   }
 
@@ -103,6 +115,19 @@ export default class GamePage extends BaseComponent {
     return fieldTilesOfLine;
   }
 
+  private createButtonLogout(): BaseComponent {
+    return new Button({
+      className: 'button-logout',
+      textContent: 'LOGOUT',
+      onClick: (event): void => {
+        event.preventDefault();
+        LocalStorageServise.deleteData('user');
+        document.location.href = `/rss-puzzle/`;
+        window.history.pushState({}, '', '/');
+      },
+    });
+  }
+
   private createButtonContinue(): BaseComponent {
     return new Button({
       className: 'form-button game-button hide',
@@ -121,6 +146,17 @@ export default class GamePage extends BaseComponent {
       onClick: (e): void => {
         e.preventDefault();
         this.checkRightPhrase();
+      },
+    });
+  }
+
+  private createButtonAutofill(): BaseComponent {
+    return new Button({
+      className: 'form-button game-button game-button-autofill',
+      textContent: "I don't no ;(",
+      onClick: (e): void => {
+        e.preventDefault();
+        this.autofillCards();
       },
     });
   }
@@ -160,16 +196,12 @@ export default class GamePage extends BaseComponent {
 
   public checkPhraseFull(): void {
     const arrayTiles: HTMLCollection = this.fieldLines[SettingsServise.currentIndexPhrase].getNode().children;
-    // let resultPhrase = '';
     let countWords = 0;
     for (let i = 0; i < arrayTiles.length; i += 1) {
       if (arrayTiles[i].textContent) {
-        //  resultPhrase += `${arrayTiles[i].textContent} `;
         countWords += 1;
       }
     }
-    // resultPhrase.trim();
-
     if (countWords === SettingsServise.numWordsInPhrase(SettingsServise.currentIndexPhrase)) {
       this.buttonCheck.removeClass('hide');
     }
@@ -178,9 +210,11 @@ export default class GamePage extends BaseComponent {
   public checkRightPhrase(): void {
     const arrayTiles: HTMLCollection = this.fieldLines[SettingsServise.currentIndexPhrase].getNode().children;
     let resultPhrase = '';
+    let error = false;
     for (let i = 0; i < arrayTiles.length; i += 1) {
       if (Number(arrayTiles[i].children[0].getAttribute('data')) !== i) {
         arrayTiles[i].classList.add('error');
+        error = true;
       } else {
         arrayTiles[i].classList.remove('error');
       }
@@ -189,7 +223,7 @@ export default class GamePage extends BaseComponent {
       }
     }
     resultPhrase.trim();
-    if (resultPhrase.trim() === SettingsServise.currentPhrase(SettingsServise.currentIndexPhrase)) {
+    if (resultPhrase.trim() === SettingsServise.currentPhrase(SettingsServise.currentIndexPhrase) && !error) {
       this.buttonContinue.removeClass('hide');
       this.buttonCheck.addClass('hide');
       this.fieldLines[SettingsServise.currentIndexPhrase].addClass('block');
@@ -197,20 +231,27 @@ export default class GamePage extends BaseComponent {
   }
 
   public moveToNextRound(): void {
+    this.buttonAutofill.removeClass('hide');
     if (SettingsServise.currentIndexPhrase === SettingsServise.countOfLines - 1) {
       this.moveToNextPicture();
-    }
-    SettingsServise.currentIndexPhrase += 1;
-    if (this.gameLine) {
-      this.gameLine.getChildren().forEach((element) => {
-        if (element.getNode().classList.contains('show-empty-card')) {
-          this.gameLine?.removeChild(element);
-        }
-      });
-      this.gameLine.setHTML('');
-      this.gameLine.appendChildren(this.generatePuzzles());
-      this.buttonContinue.addClass('hide');
-      this.buttonCheck.addClass('hide');
+    } else {
+      SettingsServise.currentIndexPhrase += 1;
+      if (this.gameLine) {
+        this.gameLine.getChildren().forEach((element) => {
+          if (element.getNode().classList.contains('show-empty-card')) {
+            this.gameLine?.removeChild(element);
+          }
+        });
+        this.gameLine.setHTML('');
+        SettingsServise.moveXCurrentPosition = 0;
+        SettingsServise.moveXPositions = [];
+        SettingsServise.moveYCurrentPosition = 0;
+        SettingsServise.moveYPositions = [];
+        SettingsServise.positionsCards();
+        this.gameLine.appendChildren(this.generatePuzzles());
+        this.buttonContinue.addClass('hide');
+        this.buttonCheck.addClass('hide');
+      }
     }
   }
 
@@ -219,13 +260,50 @@ export default class GamePage extends BaseComponent {
     SettingsServise.currentIndexPicture += 1;
     this.destroyChildren();
     this.fieldPicture.destroyChildren();
+    SettingsServise.moveXCurrentPosition = 0;
+    SettingsServise.moveXPositions = [];
+    SettingsServise.moveYCurrentPosition = 0;
+    SettingsServise.moveYPositions = [];
+    SettingsServise.positionsCards();
+    SettingsServise.setMainPicture();
+    this.buttonContinue.addClass('hide');
+    this.buttonCheck.addClass('hide');
 
     this.fieldPicture = this.createFieldPicture();
     // this.fieldPicture.setAttribute(
     //   'style',
     //   `background-image: url(src/app/data/images/${SettingsServise.currentMainPicture()})`,
     // );
+    this.buttonWrapper = new BaseComponent(
+      {
+        tagName: 'div',
+        className: 'button-wrapper',
+      },
+      this.buttonContinue,
+      this.buttonCheck,
+    );
     this.linePuzzles = this.createLinePuzzles();
-    this.appendChildren([this.fieldPicture, this.linePuzzles]);
+    this.appendChildren([this.fieldPicture, this.linePuzzles, this.buttonWrapper, this.createButtonLogout()]);
+  }
+
+  public autofillCards(): void {
+    const arrayTiles: HTMLCollection = this.fieldLines[SettingsServise.currentIndexPhrase].getNode().children;
+    const arrayPuzzles: BaseComponent[] | undefined = this.gameLine?.getChildren();
+    if (arrayPuzzles) {
+      arrayPuzzles
+        .map((item) => item.getChildren()[0].getNode())
+        .sort((a, b) => Number(a.getAttribute('data')) - Number(b.getAttribute('data')))
+        .forEach((item, index) => {
+          arrayTiles[index].setAttribute('style', `${item.getAttribute('style')}`);
+          arrayTiles[index].setAttribute('border', `none`);
+          if (item.parentNode instanceof HTMLElement) {
+            item.parentNode?.classList.add('show-empty-card');
+          }
+          arrayTiles[index].classList.remove('empty-card');
+          arrayTiles[index].append(item);
+        });
+    }
+    this.checkRightPhrase();
+    this.buttonAutofill.addClass('hide');
   }
 }

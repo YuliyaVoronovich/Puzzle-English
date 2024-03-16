@@ -24,10 +24,27 @@
     0 0 1em black,
     0 0 0.2em black;
 
-  background: #2088d2;
+  background-color: #2f68cb;
+  background-size: 700px auto;
   outline: 1px solid rgb(180 158 158);
 
   transition: 0.5s;
+}
+
+.game-field .card {
+  transform: translate(0, 0);
+  animation: move;
+  animation-duration: 1s;
+}
+
+@keyframes move {
+  from {
+    transform: translate(100%) translateY(50%);
+  }
+
+  to {
+    transform: translate(0) translateY(0);
+  }
 }
 
 .card:hover {

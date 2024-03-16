@@ -10,7 +10,7 @@
 .game-field {
   width: 100%;
   height: auto;
-  background-color: rgb(241 241 201);
+  background-color: rgb(219, 219, 219);
   background-size: 700px auto;
 }
 
@@ -28,7 +28,7 @@
   gap: 1px;
   align-items: center;
   justify-content: center;
-  background: rgb(219 219 190);
+  background: rgb(154, 226, 241);
 }
 
 .field-line.block {
@@ -43,6 +43,7 @@
 }
 
 .button-wrapper {
+  width: 100%;
   display: flex;
   flex-direction: row;
   align-self: center;
@@ -60,7 +61,19 @@
 
 .game-button.hide {
   width: 0;
+  height: 0;
   visibility: hidden;
   opacity: 0;
   transition: opacity 0.5s ease-in;
+}
+
+.button-wrapper .game-button-autofill {
+  margin-left: auto;
+  background-color: #f08585;
+  border: #f08585;
+}
+
+.button-wrapper .game-button-autofill:hover {
+  background-color: #ea3434;
+  border-color: #ea3434;
 }
