@@ -1,12 +1,6 @@
-.game-line {
-  display: flex;
-  flex-direction: row;
-  gap: 1px;
-  margin-top: 30px;
-}
-
 .card {
   cursor: pointer;
+
   position: relative;
 
   display: flex;
@@ -62,15 +56,19 @@
 
 .word::before {
   content: '';
-  display: block;
-  width: 14px;
-  height: 14px;
+
   position: absolute;
+  z-index: 5;
   top: 12px;
   left: 0;
+
+  display: block;
+
+  width: 14px;
+  height: 14px;
+
+  background: rgb(229 225 225);
   border-radius: 50%;
-  background: rgb(154, 226, 241);
-  z-index: 5;
 }
 
 .tile-0 .word::before {
@@ -79,14 +77,18 @@
 
 .after {
   content: '';
-  display: block;
-  width: 15px;
-  height: 15px;
+
   position: absolute;
   top: 12px;
   right: -14px;
-  border-radius: 50%;
+
+  display: block;
+
+  width: 15px;
+  height: 15px;
+
   background-color: #2f68cb;
+  border-radius: 50%;
 }
 
 .show-empty-card {

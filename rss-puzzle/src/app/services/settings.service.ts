@@ -35,7 +35,11 @@ class Settings {
     this.setMainPicture();
   }
 
-  public currentPhrase(index: number = this.currentIndexPicture): string {
+  public textHint(index: number = this.currentIndexPhrase): string {
+    return DataServise.dataRounds[this.currentIndexPicture].words[index].textExampleTranslate;
+  }
+
+  public currentPhrase(index: number = this.currentIndexPhrase): string {
     return DataServise.dataRounds[this.currentIndexPicture].words[index].textExample;
   }
 

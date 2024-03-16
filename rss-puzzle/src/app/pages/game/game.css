@@ -10,7 +10,7 @@
 .game-field {
   width: 100%;
   height: auto;
-  background-color: rgb(219 219 219);
+  background-color: rgb(229 225 225);
   background-size: 700px auto;
 }
 
@@ -25,10 +25,13 @@
 }
 
 .game-line {
+  display: flex;
+  flex-direction: row;
   gap: 1px;
   align-items: center;
   justify-content: center;
-  background: rgb(154 226 241);
+
+  background: rgb(229 225 225);
 }
 
 .field-line.block {
@@ -79,4 +82,36 @@
 .button-wrapper .game-button-autofill:hover {
   background-color: #ea3434;
   border-color: #ea3434;
+}
+
+.game-field-hint {
+  display: flex;
+  flex-direction: row;
+  gap: 5px;
+  align-items: center;
+
+  width: 100%;
+  padding: 5px 0 0;
+}
+
+.icon-hint {
+  cursor: pointer;
+  width: 25px;
+  height: auto;
+  transition: 0.3s;
+}
+
+.text-hint {
+  font-size: 14px;
+  color: #f08585;
+
+  visibility: hidden;
+  opacity: 0;
+
+  transition: 0.5s;
+}
+
+.icon-hint:hover ~ .text-hint {
+  visibility: visible;
+  opacity: 1;
 }
