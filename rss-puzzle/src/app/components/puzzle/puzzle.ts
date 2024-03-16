@@ -1,4 +1,5 @@
 import './puzzle.css';
+import { SettingsServise } from '../../services/settings.service';
 import BaseComponent from '../base-component';
 // import { SettingsServise } from '../../services/settings.service';
 
@@ -47,7 +48,7 @@ export default class Puzzle extends BaseComponent {
           className: `word`,
           textContent: word,
         },
-        new BaseComponent({ tagName: 'span', className: `after` }),
+        this.createAfter(index),
       ),
     );
     let heightPuzzle = '';
@@ -56,10 +57,19 @@ export default class Puzzle extends BaseComponent {
     }
 
     cardBlock.setAttribute('style', `width:${width}px;${heightPuzzle};`);
+    // cardBlock.getNode().style.zIndex = `${8 * 10 - 10 * index}`;
     // cardBlock.getNode().style.backgroundImage = `url(./src/app/data/images/${SettingsServise.mainPicture})`;
     // cardBlock.getNode().style.backgroundPosition = `-${positionX}px  -${positionY}px`;
     cardBlock.setAttribute('data', `${index}`);
 
     return cardBlock;
+  }
+
+  public createAfter(index: number): BaseComponent {
+    const after = new BaseComponent({ tagName: 'span', className: `after` });
+    if (index === SettingsServise.numWordsInPhrase(SettingsServise.currentIndexPhrase) - 1) {
+      after.setAttribute('style', `backgroundColor: #fff; left:0`);
+    }
+    return after;
   }
 }

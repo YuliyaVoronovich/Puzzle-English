@@ -6,6 +6,8 @@ import Puzzle from '../../components/puzzle/puzzle';
 import { SettingsServise } from '../../services/settings.service';
 
 export default class GamePage extends BaseComponent {
+  private zIndexCoefficient = 10;
+
   private fieldPicture: BaseComponent;
 
   private fieldLines: BaseComponent[] = [];
@@ -42,6 +44,7 @@ export default class GamePage extends BaseComponent {
       this.buttonCheck,
       this.buttonAutofill,
     );
+    this.inputPuzzles();
     this.appendChildren([this.fieldPicture, this.linePuzzles, this.buttonWrapper, this.createButtonLogout()]);
   }
 
@@ -61,9 +64,18 @@ export default class GamePage extends BaseComponent {
         tagName: 'div',
         className: 'game-line',
       },
-      ...this.generatePuzzles(),
+      // ...this.generatePuzzles(),
     );
     return this.gameLine;
+  }
+
+  public inputPuzzles(): void {
+    const puzzles = this.generatePuzzles();
+    for (let i = 0; i < puzzles.length; i += 1) {
+      puzzles[i].getNode().style.zIndex =
+        `${SettingsServise.numWordsInPhrase(SettingsServise.currentIndexPhrase) * this.zIndexCoefficient - this.zIndexCoefficient * i}`;
+      this.gameLine?.append(puzzles[i]);
+    }
   }
 
   private generatePuzzles(): Puzzle[] {
@@ -183,8 +195,12 @@ export default class GamePage extends BaseComponent {
     const arrayTiles: HTMLCollection = this.fieldLines[SettingsServise.currentIndexPhrase].getNode().children;
     for (let i = 0; i < arrayTiles.length; i += 1) {
       if (arrayTiles[i].classList.contains('empty-card')) {
-        arrayTiles[i].setAttribute('style', `${card.getAttribute('style')}`);
+        //  arrayTiles[i].setAttribute('style', `${card.getAttribute('style')}`);
         arrayTiles[i].setAttribute('border', `none`);
+        arrayTiles[i].setAttribute(
+          'style',
+          `z-index: ${SettingsServise.numWordsInPhrase(SettingsServise.currentIndexPhrase) * this.zIndexCoefficient - this.zIndexCoefficient * i}; ${card.getAttribute('style')}`,
+        );
         element.classList.add('show-empty-card');
         arrayTiles[i].classList.remove('empty-card');
         arrayTiles[i].append(card);
@@ -248,7 +264,9 @@ export default class GamePage extends BaseComponent {
         SettingsServise.moveYCurrentPosition = 0;
         SettingsServise.moveYPositions = [];
         SettingsServise.positionsCards();
-        this.gameLine.appendChildren(this.generatePuzzles());
+        this.generatePuzzles();
+        this.inputPuzzles();
+        //  this.gameLine.appendChildren(this.generatePuzzles());
         this.buttonContinue.addClass('hide');
         this.buttonCheck.addClass('hide');
       }
@@ -268,6 +286,7 @@ export default class GamePage extends BaseComponent {
     SettingsServise.setMainPicture();
     this.buttonContinue.addClass('hide');
     this.buttonCheck.addClass('hide');
+    this.buttonAutofill.removeClass('hide');
 
     this.fieldPicture = this.createFieldPicture();
     // this.fieldPicture.setAttribute(
@@ -281,8 +300,11 @@ export default class GamePage extends BaseComponent {
       },
       this.buttonContinue,
       this.buttonCheck,
+      this.buttonAutofill,
     );
     this.linePuzzles = this.createLinePuzzles();
+    this.generatePuzzles();
+    this.inputPuzzles();
     this.appendChildren([this.fieldPicture, this.linePuzzles, this.buttonWrapper, this.createButtonLogout()]);
   }
 
@@ -294,7 +316,11 @@ export default class GamePage extends BaseComponent {
         .map((item) => item.getChildren()[0].getNode())
         .sort((a, b) => Number(a.getAttribute('data')) - Number(b.getAttribute('data')))
         .forEach((item, index) => {
-          arrayTiles[index].setAttribute('style', `${item.getAttribute('style')}`);
+          // arrayTiles[index].setAttribute('style', `${item.getAttribute('style')}`);
+          arrayTiles[index].setAttribute(
+            'style',
+            `z-index: ${SettingsServise.numWordsInPhrase(SettingsServise.currentIndexPhrase) * 10 - 10 * index}; ${item.getAttribute('style')}`,
+          );
           arrayTiles[index].setAttribute('border', `none`);
           if (item.parentNode instanceof HTMLElement) {
             item.parentNode?.classList.add('show-empty-card');

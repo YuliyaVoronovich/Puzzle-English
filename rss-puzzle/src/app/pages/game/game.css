@@ -10,7 +10,7 @@
 .game-field {
   width: 100%;
   height: auto;
-  background-color: rgb(219, 219, 219);
+  background-color: rgb(219 219 219);
   background-size: 700px auto;
 }
 
@@ -28,7 +28,7 @@
   gap: 1px;
   align-items: center;
   justify-content: center;
-  background: rgb(154, 226, 241);
+  background: rgb(154 226 241);
 }
 
 .field-line.block {
@@ -43,12 +43,13 @@
 }
 
 .button-wrapper {
-  width: 100%;
   display: flex;
   flex-direction: row;
   align-self: center;
   justify-content: center;
 
+  width: 100%;
+  height: 40px;
   margin-top: 30px;
 }
 
@@ -62,8 +63,10 @@
 .game-button.hide {
   width: 0;
   height: 0;
+
   visibility: hidden;
   opacity: 0;
+
   transition: opacity 0.5s ease-in;
 }
 
