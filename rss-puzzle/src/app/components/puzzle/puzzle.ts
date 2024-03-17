@@ -2,7 +2,7 @@ import './puzzle.css';
 import { SettingsServise } from '../../services/settings.service';
 import BaseComponent from '../base-component';
 
-export default class Puzzle extends BaseComponent {
+export class Puzzle extends BaseComponent {
   private onClick;
 
   public positionYOnset = 12;

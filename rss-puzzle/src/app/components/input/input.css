@@ -23,13 +23,13 @@
 .error {
   margin-top: -10px;
   font-size: 10px;
-  color: red;
+  color: #b40909;
   visibility: hidden;
 }
 
 .error.show {
   margin-top: -10px;
   font-size: 10px;
-  color: red;
+  color: #b40909;
   visibility: visible;
 }

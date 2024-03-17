@@ -1,11 +1,12 @@
 import './game.css';
-import Header from './header/header';
+import { Header } from './header/header';
 import { LocalStorageServise } from '../../services/local-storage.service';
-import Button from '../../components/button/button';
+import { Button } from '../../components/button/button';
 import BaseComponent from '../../components/base-component';
-import Puzzle from '../../components/puzzle/puzzle';
+import { Puzzle } from '../../components/puzzle/puzzle';
 import { SettingsServise } from '../../services/settings.service';
 import type { Hints } from '../../types/types';
+import { Logout } from '../../components/logout/logout';
 
 export default class GamePage extends BaseComponent {
   private zIndexCoefficient = 10;
@@ -29,6 +30,8 @@ export default class GamePage extends BaseComponent {
   private buttonWrapper: BaseComponent;
 
   private textHint: BaseComponent | undefined;
+
+  // private arrayTiles: HTMLCollection;
 
   private showBackgroundOnCard = true;
 
@@ -55,23 +58,26 @@ export default class GamePage extends BaseComponent {
     );
     this.inputPuzzles();
     this.appendChildren([
-      new Header(this.changeHints),
+      new Header(this.changeHintTranslate, this.changeHintsBackground),
       this.fieldPicture,
       this.hintLine,
       this.linePuzzles,
       this.buttonWrapper,
-      this.createButtonLogout(),
+      new Logout(),
     ]);
   }
 
-  public changeHints = (hints: Hints): void => {
+  public changeHintTranslate = (hints: Hints): void => {
     console.log(hints);
     if (hints.translate) {
       this.hintLine.addClass('show');
     } else {
       this.hintLine.removeClass('show');
     }
+  };
 
+  public changeHintsBackground = (hints: Hints): void => {
+    console.log(hints);
     // if (hints.picture) {
     //   this.showBackgroundOnCard = true;
     // } else {
@@ -161,19 +167,6 @@ export default class GamePage extends BaseComponent {
       fieldTilesOfLine.push(tile);
     }
     return fieldTilesOfLine;
-  }
-
-  private createButtonLogout(): BaseComponent {
-    return new Button({
-      className: 'button-logout',
-      textContent: 'LOGOUT',
-      onClick: (event): void => {
-        event.preventDefault();
-        LocalStorageServise.deleteData('user');
-        document.location.href = `/rss-puzzle/`;
-        window.history.pushState({}, '', '/');
-      },
-    });
   }
 
   private createButtonContinue(): BaseComponent {
@@ -271,21 +264,22 @@ export default class GamePage extends BaseComponent {
   public clickPuzzle = (element: HTMLElement): void => {
     const card = element.children[0];
     const arrayTiles: HTMLCollection = this.fieldLines[SettingsServise.currentIndexPhrase].getNode().children;
-    for (let i = 0; i < arrayTiles.length; i += 1) {
-      if (arrayTiles[i].classList.contains('empty-card')) {
-        //  arrayTiles[i].setAttribute('style', `${card.getAttribute('style')}`);
-        arrayTiles[i].setAttribute('border', `none`);
-        if (card instanceof HTMLElement) {
-          arrayTiles[i].setAttribute(
-            'style',
-            `z-index: ${SettingsServise.numWordsInPhrase(SettingsServise.currentIndexPhrase) * this.zIndexCoefficient - this.zIndexCoefficient * i};
-          width: ${card.style.width}, height: ${card.style.height}`,
-          );
+    if (card) {
+      for (let i = 0; i < arrayTiles.length; i += 1) {
+        if (arrayTiles[i].classList.contains('empty-card')) {
+          arrayTiles[i].setAttribute('border', `none`);
+          if (card instanceof HTMLElement) {
+            arrayTiles[i].setAttribute(
+              'style',
+              `z-index: ${SettingsServise.numWordsInPhrase(SettingsServise.currentIndexPhrase) * this.zIndexCoefficient - this.zIndexCoefficient * i};
+            width: ${card.style.width}, height: ${card.style.height}`,
+            );
+          }
+          element.classList.add('show-empty-card');
+          arrayTiles[i].classList.remove('empty-card');
+          arrayTiles[i].append(card);
+          break;
         }
-        element.classList.add('show-empty-card');
-        arrayTiles[i].classList.remove('empty-card');
-        arrayTiles[i].append(card);
-        break;
       }
     }
     this.checkPhraseFull();
@@ -354,7 +348,6 @@ export default class GamePage extends BaseComponent {
         this.generatePuzzles();
         this.inputPuzzles();
         this.textHint?.append(this.createHintTranslateText());
-        //  this.gameLine.appendChildren(this.generatePuzzles());
         this.buttonContinue.addClass('hide');
         this.buttonCheck.addClass('hide');
       }
@@ -395,12 +388,12 @@ export default class GamePage extends BaseComponent {
     this.generatePuzzles();
     this.inputPuzzles();
     this.appendChildren([
-      new Header(this.changeHints),
+      new Header(this.changeHintTranslate, this.changeHintsBackground),
       this.fieldPicture,
       this.hintLine,
       this.linePuzzles,
       this.buttonWrapper,
-      this.createButtonLogout(),
+      new Logout(),
     ]);
   }
 
@@ -412,9 +405,6 @@ export default class GamePage extends BaseComponent {
         .map((item) => item.getChildren()[0].getNode())
         .sort((a, b) => Number(a.getAttribute('data')) - Number(b.getAttribute('data')))
         .forEach((item, index) => {
-          // arrayTiles[index].setAttribute('style', `${item.getAttribute('style')}`);
-          // console.log(item.style.width);
-          // console.log(item.style.height);
           arrayTiles[index].setAttribute(
             'style',
             `z-index: ${SettingsServise.numWordsInPhrase(SettingsServise.currentIndexPhrase) * 10 - 10 * index}; width: ${item.style.width}; height: ${item.style.height}`,

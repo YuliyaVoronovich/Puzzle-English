@@ -1,7 +1,7 @@
 import './login.css';
 import BaseComponent from '../../components/base-component';
-import Input from '../../components/input/input';
-import Button from '../../components/button/button';
+import { Input } from '../../components/input/input';
+import { Button } from '../../components/button/button';
 import { ValidationServise } from '../../services/validation.service';
 import { LocalStorageServise } from '../../services/local-storage.service';
 
@@ -107,11 +107,7 @@ export default class LoginPage extends BaseComponent {
 
   private checkButton(): void {
     const result = Object.values(this.checkValidation).every((item) => item === true);
-    if (!result) {
-      this.buttonEnter.addClass('disabled');
-    } else {
-      this.buttonEnter.removeClass('disabled');
-    }
+    this.buttonEnter.toggleClass('disabled', !result);
   }
 
   private saveDataToLocalStorage(event: Event): void {
@@ -121,5 +117,9 @@ export default class LoginPage extends BaseComponent {
     if (name && surname) {
       LocalStorageServise.setItem('user', { name, surname });
     }
+
+    LocalStorageServise.setItem('translate_hint', true);
+    LocalStorageServise.setItem('audio_hint', true);
+    LocalStorageServise.setItem('picture_hint', true);
   }
 }

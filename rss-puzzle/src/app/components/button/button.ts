@@ -3,11 +3,11 @@ import BaseComponent from '../base-component';
 
 interface IButton {
   className: string;
-  textContent: string;
+  textContent?: string;
   onClick?: (e: Event) => void;
 }
 
-export default class Button extends BaseComponent {
+export class Button extends BaseComponent {
   constructor({ className, textContent, onClick }: IButton) {
     super({
       tagName: 'button',

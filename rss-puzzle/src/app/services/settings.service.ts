@@ -30,7 +30,7 @@ class Settings {
 
   public hints = {
     translate: LocalStorageServise.getHints('translate_hint'),
-    audio: false,
+    audio: LocalStorageServise.getHints('audio_hint'),
     picture: LocalStorageServise.getHints('picture_hint'),
   };
 

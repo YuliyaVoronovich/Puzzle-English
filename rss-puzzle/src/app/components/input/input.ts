@@ -10,7 +10,7 @@ interface IInput {
   onInput?: (e: Event) => void;
 }
 
-export default class Input extends BaseComponent {
+export class Input extends BaseComponent {
   constructor({ type, classNameInput, name, placeholder, value, onInput }: IInput) {
     super({
       tagName: 'input',

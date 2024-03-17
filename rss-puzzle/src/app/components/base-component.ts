@@ -68,8 +68,8 @@ export default class BaseComponent {
     this.node.classList.remove(className);
   }
 
-  public toggleClass(className: string): void {
-    this.node.classList.toggle(className);
+  public toggleClass(className: string, force?: boolean): void {
+    this.node.classList.toggle(className, force);
   }
 
   public addListener(

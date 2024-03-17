@@ -1,7 +1,8 @@
 import './start.css';
 import BaseComponent from '../../components/base-component';
-import Button from '../../components/button/button';
+import { Button } from '../../components/button/button';
 import { LocalStorageServise } from '../../services/local-storage.service';
+import { Logout } from '../../components/logout/logout';
 
 export default class StartPage extends BaseComponent {
   constructor() {
@@ -18,9 +19,8 @@ export default class StartPage extends BaseComponent {
         'Collect puzzles and learn English! Make unique offers and discover amazing pictures! Click and drag small pieces onto the field and gradually reveal fragments of the picture. If you encounter any difficulties, use the hints. Enjoy relaxing puzzles to train your brain and improve your language level!',
     });
     const buttonEnter = this.createButtonStart();
-    const buttonLogout = this.createButtonLogout();
     const stiker = this.createSicker();
-    this.appendChildren([pageTitle, pageText, buttonEnter, stiker, buttonLogout]);
+    this.appendChildren([pageTitle, pageText, buttonEnter, stiker, new Logout()]);
   }
 
   private createButtonStart(): BaseComponent {
@@ -29,19 +29,6 @@ export default class StartPage extends BaseComponent {
       textContent: 'START',
       onClick: (): void => {
         document.location.href = `/rss-puzzle/game`;
-      },
-    });
-  }
-
-  private createButtonLogout(): BaseComponent {
-    return new Button({
-      className: 'button-logout',
-      textContent: 'LOGOUT',
-      onClick: (event): void => {
-        event.preventDefault();
-        LocalStorageServise.deleteData('user');
-        document.location.href = `/rss-puzzle/`;
-        window.history.pushState({}, '', '/');
       },
     });
   }

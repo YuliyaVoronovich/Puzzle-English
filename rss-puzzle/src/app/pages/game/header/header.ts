@@ -1,20 +1,22 @@
 import './header.css';
 import BaseComponent from '../../../components/base-component';
-import Button from '../../../components/button/button';
+import { Button } from '../../../components/button/button';
 import { SettingsServise } from '../../../services/settings.service';
 import { LocalStorageServise } from '../../../services/local-storage.service';
 import type { Hints } from '../../../types/types';
 
-export default class Header extends BaseComponent {
+export class Header extends BaseComponent {
   private hintTranslate: BaseComponent;
 
-  private onClick;
-
-  constructor(onClick: (el: Hints) => void) {
+  constructor(
+    private onClickTranslate: (el: Hints) => void,
+    private onClickBackground: (el: Hints) => void,
+  ) {
     super({ tagName: 'div', className: 'game-header' });
-    const iconHintTranslate = this.createButtonTranslate();
-    const iconHintBackground = this.createButtonBackground();
-    this.onClick = onClick;
+    const hihtLocalStorageTranslate = LocalStorageServise.getHints('translate_hint');
+    const hihtLocalStorageBackground = LocalStorageServise.getHints('picture_hint');
+    const iconHintTranslate = this.createButtonTranslate(hihtLocalStorageTranslate);
+    const iconHintBackground = this.createButtonBackground(hihtLocalStorageBackground);
     this.hintTranslate = new BaseComponent(
       {
         tagName: 'div',
@@ -23,19 +25,10 @@ export default class Header extends BaseComponent {
       iconHintTranslate,
       iconHintBackground,
     );
-    this.addListener('click', (e) => {
-      e.preventDefault();
-      if (e.target instanceof HTMLElement) {
-        if (e.target?.classList.contains('icon-button')) {
-          this.onClick(SettingsServise.hints);
-        }
-      }
-    });
-
     this.append(this.hintTranslate);
   }
 
-  private createButtonTranslate(): BaseComponent {
+  private createButtonTranslate(hasHint: boolean): BaseComponent {
     const hintButton = new BaseComponent(
       {
         tagName: 'div',
@@ -47,14 +40,11 @@ export default class Header extends BaseComponent {
         onClick: (e): void => {
           e.preventDefault();
           this.toogleHintTranslate(hintButton);
+          this.onClickTranslate(SettingsServise.hints);
         },
       }),
     );
-    if (LocalStorageServise.getHints('translate_hint')) {
-      hintButton.addClass('hint-on');
-    } else {
-      hintButton.removeClass('hint-on');
-    }
+    hintButton.toggleClass('hint-on', hasHint);
     return hintButton;
   }
 
@@ -65,7 +55,7 @@ export default class Header extends BaseComponent {
     SettingsServise.hints.translate = !hint;
   }
 
-  private createButtonBackground(): BaseComponent {
+  private createButtonBackground(hasHint: boolean): BaseComponent {
     const hintButtonPicture = new BaseComponent(
       {
         tagName: 'div',
@@ -73,18 +63,14 @@ export default class Header extends BaseComponent {
       },
       new Button({
         className: 'icon-button',
-        textContent: '',
         onClick: (e): void => {
           e.preventDefault();
           this.toogleHintBackground(hintButtonPicture);
+          this.onClickBackground(SettingsServise.hints);
         },
       }),
     );
-    if (LocalStorageServise.getHints('picture_hint')) {
-      hintButtonPicture.addClass('hint-on');
-    } else {
-      hintButtonPicture.removeClass('hint-on');
-    }
+    hintButtonPicture.toggleClass('hint-on', hasHint);
     return hintButtonPicture;
   }
 
