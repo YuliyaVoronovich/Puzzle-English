@@ -6,20 +6,22 @@ import { LocalStorageServise } from '../../../services/local-storage.service';
 import type { Hints } from '../../../types/types';
 
 export default class Header extends BaseComponent {
-  private hint: BaseComponent;
+  private hintTranslate: BaseComponent;
 
   private onClick;
 
   constructor(onClick: (el: Hints) => void) {
     super({ tagName: 'div', className: 'game-header' });
-    const iconHint = this.createButtonCheckTranslate();
+    const iconHintTranslate = this.createButtonTranslate();
+    const iconHintBackground = this.createButtonBackground();
     this.onClick = onClick;
-    this.hint = new BaseComponent(
+    this.hintTranslate = new BaseComponent(
       {
         tagName: 'div',
         className: 'toolbar-hints',
       },
-      iconHint,
+      iconHintTranslate,
+      iconHintBackground,
     );
     this.addListener('click', (e) => {
       e.preventDefault();
@@ -30,10 +32,10 @@ export default class Header extends BaseComponent {
       }
     });
 
-    this.append(this.hint);
+    this.append(this.hintTranslate);
   }
 
-  private createButtonCheckTranslate(): BaseComponent {
+  private createButtonTranslate(): BaseComponent {
     const hintButton = new BaseComponent(
       {
         tagName: 'div',
@@ -44,23 +46,52 @@ export default class Header extends BaseComponent {
         textContent: '',
         onClick: (e): void => {
           e.preventDefault();
-          this.toogleIconHint(hintButton);
+          this.toogleHintTranslate(hintButton);
         },
       }),
     );
-    if (LocalStorageServise.getHints('translate_hint') === 'true') {
+    if (LocalStorageServise.getHints('translate_hint')) {
       hintButton.addClass('hint-on');
     } else {
       hintButton.removeClass('hint-on');
     }
-
     return hintButton;
   }
 
-  private toogleIconHint(element: BaseComponent): void {
-    const hint = LocalStorageServise.getHints('translate_hint') === 'false';
-    LocalStorageServise.setItem('translate_hint', hint);
+  private toogleHintTranslate(element: BaseComponent): void {
+    const hint = LocalStorageServise.getHints('translate_hint');
+    LocalStorageServise.setItem('translate_hint', !hint);
     element.toggleClass('hint-on');
-    SettingsServise.hints.translate = hint;
+    SettingsServise.hints.translate = !hint;
+  }
+
+  private createButtonBackground(): BaseComponent {
+    const hintButtonPicture = new BaseComponent(
+      {
+        tagName: 'div',
+        className: 'hint-background',
+      },
+      new Button({
+        className: 'icon-button',
+        textContent: '',
+        onClick: (e): void => {
+          e.preventDefault();
+          this.toogleHintBackground(hintButtonPicture);
+        },
+      }),
+    );
+    if (LocalStorageServise.getHints('picture_hint')) {
+      hintButtonPicture.addClass('hint-on');
+    } else {
+      hintButtonPicture.removeClass('hint-on');
+    }
+    return hintButtonPicture;
+  }
+
+  private toogleHintBackground(element: BaseComponent): void {
+    const hint = LocalStorageServise.getHints('picture_hint');
+    LocalStorageServise.setItem('picture_hint', !hint);
+    element.toggleClass('hint-on');
+    SettingsServise.hints.picture = !hint;
   }
 }

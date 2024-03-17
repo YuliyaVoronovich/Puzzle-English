@@ -1,4 +1,5 @@
 import { DataServise } from './data.service';
+import { LocalStorageServise } from './local-storage.service';
 
 class Settings {
   public currentIndexPicture = 0;
@@ -28,9 +29,9 @@ class Settings {
   public moveYPositions: number[] = [];
 
   public hints = {
-    translate: false,
+    translate: LocalStorageServise.getHints('translate_hint'),
     audio: false,
-    picture: false,
+    picture: LocalStorageServise.getHints('picture_hint'),
   };
 
   constructor() {

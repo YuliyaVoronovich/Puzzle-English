@@ -33,7 +33,9 @@
   transition: 0.5s;
 }
 
-.hint-translate {
+.hint-translate,
+.hint-background {
+  padding: 2px;
   background-color: rgb(196 198 197);
   border-radius: 5px;
 }
@@ -42,10 +44,16 @@
   background: url('../../../../assets/images/hint_translate.png');
 }
 
-.hint-translate:active {
+.hint-background .icon-button {
+  background: url('../../../../assets/images/hint_background.png');
+}
+
+.hint-translate:active,
+.hint-background:active {
   scale: 0.9;
 }
 
-.hint-translate.hint-on {
+.hint-translate.hint-on,
+.hint-background.hint-on {
   background-color: rgb(106 229 166);
 }

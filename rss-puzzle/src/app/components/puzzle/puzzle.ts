@@ -14,6 +14,7 @@ export default class Puzzle extends BaseComponent {
     height: number,
     positionX: number,
     positionY: number,
+    showBack: boolean,
     onClick: (element: HTMLElement) => void,
   ) {
     super({
@@ -21,7 +22,7 @@ export default class Puzzle extends BaseComponent {
       className: 'tile-card',
     });
 
-    this.append(this.createCard(word, index, width, height, positionX, positionY));
+    this.append(this.createCard(word, index, width, height, positionX, positionY, showBack));
     this.onClick = onClick;
     if (this.onClick) {
       this.addListener('click', () => {
@@ -37,6 +38,7 @@ export default class Puzzle extends BaseComponent {
     height: number,
     positionX: number,
     positionY: number,
+    showBack: boolean,
   ): BaseComponent {
     const cardBlock = new BaseComponent(
       {
@@ -49,7 +51,7 @@ export default class Puzzle extends BaseComponent {
           className: `word`,
           textContent: word,
         },
-        this.createAfter(index, positionX, positionY, width),
+        this.createAfter(index, positionX, positionY, width, showBack),
       ),
     );
     let heightPuzzle = '';
@@ -58,22 +60,34 @@ export default class Puzzle extends BaseComponent {
     }
 
     cardBlock.setAttribute('style', `width:${width}px;${heightPuzzle};`);
-    cardBlock.getNode().style.backgroundImage = `url(./src/app/data/images/${SettingsServise.mainPicture})`;
-    cardBlock.getNode().style.backgroundPosition = `-${positionX}px  -${positionY}px`;
+    console.log(showBack);
+    if (showBack) {
+      cardBlock.getNode().style.backgroundImage = `url(./src/app/data/images/${SettingsServise.mainPicture})`;
+      cardBlock.getNode().style.backgroundPosition = `-${positionX}px  -${positionY}px`;
+    }
+
     cardBlock.setAttribute('data', `${index}`);
 
     return cardBlock;
   }
 
-  public createAfter(index: number, positionX: number, positionY: number, width: number): BaseComponent {
+  public createAfter(
+    index: number,
+    positionX: number,
+    positionY: number,
+    width: number,
+    showBack: boolean,
+  ): BaseComponent {
     const after = new BaseComponent({ tagName: 'span', className: `after` });
     if (index === SettingsServise.numWordsInPhrase(SettingsServise.currentIndexPhrase) - 1) {
       after.setAttribute('style', `backgroundColor: #fff; left:0`);
     }
     const posX = positionX + width;
     const posY = positionY + this.positionYOnset;
-    after.getNode().style.backgroundImage = `url(./src/app/data/images/${SettingsServise.mainPicture})`;
-    after.getNode().style.backgroundPosition = `-${posX}px  -${posY}px`;
+    if (showBack) {
+      after.getNode().style.backgroundImage = `url(./src/app/data/images/${SettingsServise.mainPicture})`;
+      after.getNode().style.backgroundPosition = `-${posX}px  -${posY}px`;
+    }
     return after;
   }
 }

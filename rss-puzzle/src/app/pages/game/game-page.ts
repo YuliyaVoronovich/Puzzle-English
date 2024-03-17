@@ -30,6 +30,8 @@ export default class GamePage extends BaseComponent {
 
   private textHint: BaseComponent | undefined;
 
+  private showBackgroundOnCard = true;
+
   constructor() {
     super({ tagName: 'div', className: 'game-wrapper' });
     this.fieldPicture = this.createFieldPicture();
@@ -69,6 +71,14 @@ export default class GamePage extends BaseComponent {
     } else {
       this.hintLine.removeClass('show');
     }
+
+    // if (hints.picture) {
+    //   this.showBackgroundOnCard = true;
+    // } else {
+    //   this.showBackgroundOnCard = false;
+    // }
+    // this.gameLine?.destroyChildren();
+    // this.inputPuzzles();
   };
 
   private createFieldPicture(): BaseComponent {
@@ -103,6 +113,8 @@ export default class GamePage extends BaseComponent {
 
   private generatePuzzles(): Puzzle[] {
     const phrase = SettingsServise.currentPhrase(SettingsServise.currentIndexPhrase);
+    console.log(this.showBackgroundOnCard);
+
     return phrase
       .split(' ')
       .map((word, index: number) => {
@@ -113,6 +125,7 @@ export default class GamePage extends BaseComponent {
           SettingsServise.heigthOfLine,
           SettingsServise.moveXPositions[index],
           SettingsServise.moveYPositions[SettingsServise.currentIndexPhrase],
+          this.showBackgroundOnCard,
           this.clickPuzzle,
         );
       })
@@ -232,7 +245,7 @@ export default class GamePage extends BaseComponent {
       ),
       this.textHint,
     );
-    if (LocalStorageServise.getHints('translate_hint') === 'false') {
+    if (!LocalStorageServise.getHints('translate_hint')) {
       hintLine.removeClass('show');
     }
     return hintLine;

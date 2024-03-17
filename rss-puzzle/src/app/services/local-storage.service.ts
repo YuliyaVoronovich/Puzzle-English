@@ -31,9 +31,9 @@ class LocalStorage {
     throw new Error('unknown value stored with key user');
   }
 
-  public getHints(key: string): string | null {
+  public getHints(key: string): boolean {
     const hints = localStorage.getItem(`${LocalStoragePrefix}_${key}`);
-    return hints;
+    return hints === 'true';
   }
 
   public checkUser(key: string): boolean {
