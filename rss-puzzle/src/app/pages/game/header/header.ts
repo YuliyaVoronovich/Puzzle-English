@@ -4,9 +4,12 @@ import { Button } from '../../../components/button/button';
 import { SettingsServise } from '../../../services/settings.service';
 import { LocalStorageServise } from '../../../services/local-storage.service';
 import type { Hints } from '../../../types/types';
+import { AudioServise } from '../../../services/audio.service';
 
 export class Header extends BaseComponent {
   private hintTranslate: BaseComponent;
+
+  private isSound = false;
 
   constructor(
     private onClickTranslate: (el: Hints) => void,
@@ -25,8 +28,34 @@ export class Header extends BaseComponent {
       iconHintTranslate,
       iconHintBackground,
     );
-    this.append(this.hintTranslate);
+    this.appendChildren([this.hintTranslate, this.createMute()]);
   }
+
+  private createMute = (): BaseComponent => {
+    const sound = new BaseComponent(
+      {
+        tagName: 'div',
+        className: 'toolbar-sound',
+      },
+      new Button({
+        className: 'icon-button-sound',
+        textContent: '',
+        onClick: (e): void => {
+          if (this.isSound) {
+            return;
+          }
+          e.preventDefault();
+          sound.addClass('active');
+          this.isSound = true;
+          AudioServise.play(SettingsServise.currentIndexPhrase, () => {
+            sound.removeClass('active');
+            this.isSound = false;
+          });
+        },
+      }),
+    );
+    return sound;
+  };
 
   private createButtonTranslate(hasHint: boolean): BaseComponent {
     const hintButton = new BaseComponent(

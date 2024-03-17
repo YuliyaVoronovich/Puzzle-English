@@ -60,7 +60,7 @@ export class Puzzle extends BaseComponent {
     }
 
     cardBlock.setAttribute('style', `width:${width}px;${heightPuzzle};`);
-    console.log(showBack);
+    //  console.log(showBack);
     if (showBack) {
       cardBlock.getNode().style.backgroundImage = `url(./src/app/data/images/${SettingsServise.mainPicture})`;
       cardBlock.getNode().style.backgroundPosition = `-${positionX}px  -${positionY}px`;

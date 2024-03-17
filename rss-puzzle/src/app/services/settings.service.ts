@@ -46,6 +46,10 @@ class Settings {
     return DataServise.dataRounds[this.currentIndexPicture].words[index].textExampleTranslate;
   }
 
+  public currentAudio(index: number = this.currentIndexPhrase): string {
+    return DataServise.dataRounds[this.currentIndexPicture].words[index].audioExample;
+  }
+
   public currentPhrase(index: number = this.currentIndexPhrase): string {
     return DataServise.dataRounds[this.currentIndexPicture].words[index].textExample;
   }

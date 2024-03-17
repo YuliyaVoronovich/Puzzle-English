@@ -1,3 +1,4 @@
+import './logout.css';
 import { LocalStorageServise } from '../../services/local-storage.service';
 import { Button } from '../button/button';
 

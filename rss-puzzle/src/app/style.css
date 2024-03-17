@@ -2,7 +2,7 @@ body {
   font-family: Roboto, sans-serif;
   font-size: 22px;
   color: #fff;
-  background-color: #21214487;
+  background-color: #161627e6;
 }
 
 *,
@@ -11,24 +11,4 @@ body {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
-}
-
-.button-logout {
-  cursor: pointer;
-
-  position: absolute;
-  top: 20px;
-  right: 10px;
-
-  padding: 10px;
-
-  color: antiquewhite;
-
-  background: #385764;
-
-  transition: 0.5s;
-}
-
-.button-logout:hover {
-  scale: 1.2;
 }

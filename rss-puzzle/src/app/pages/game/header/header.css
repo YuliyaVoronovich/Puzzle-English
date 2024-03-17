@@ -1,4 +1,6 @@
 .game-header {
+  display: flex;
+  flex-direction: row;
   margin-bottom: 30px;
 }
 
@@ -7,6 +9,9 @@
   flex-direction: row;
   gap: 5px;
   align-self: center;
+
+  width: 100%;
+  max-width: 250px;
 
   border-radius: 5px;
 }
@@ -33,6 +38,26 @@
   transition: 0.5s;
 }
 
+.icon-button-sound {
+  cursor: pointer;
+
+  display: block;
+
+  width: 40px;
+  height: 40px;
+
+  border: none;
+
+  transition: 0.5s;
+}
+
+.toolbar-sound.active {
+  transform: scale(1);
+  filter: drop-shadow(0 0 12px rgb(236 222 142));
+  box-shadow: 0 0 0 0 rgb(0 0 0 / 100%);
+  animation: pulse 0.5s ease-in-out infinite;
+}
+
 .hint-translate,
 .hint-background {
   padding: 2px;
@@ -48,6 +73,10 @@
   background: url('../../../../assets/images/hint_background.png');
 }
 
+.toolbar-sound .icon-button-sound {
+  background: url('../../../../assets/images/sound.png');
+}
+
 .hint-translate:active,
 .hint-background:active {
   scale: 0.9;
@@ -56,4 +85,18 @@
 .hint-translate.hint-on,
 .hint-background.hint-on {
   background-color: rgb(106 229 166);
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+  }
+
+  50% {
+    transform: scale(1.1);
+  }
+
+  100% {
+    transform: scale(1);
+  }
 }
