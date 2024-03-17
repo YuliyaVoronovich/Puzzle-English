@@ -27,6 +27,12 @@ class Settings {
 
   public moveYPositions: number[] = [];
 
+  public hints = {
+    translate: false,
+    audio: false,
+    picture: false,
+  };
+
   constructor() {
     const img = new Image();
     img.src = `src/app/data/images/${this.mainPicture}`;

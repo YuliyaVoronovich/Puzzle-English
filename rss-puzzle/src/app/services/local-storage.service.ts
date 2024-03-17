@@ -1,4 +1,4 @@
-import type { User } from '../types/types';
+import type { Hints, User } from '../types/types';
 
 const LocalStoragePrefix = 'yuliyavoronovich-JSFE2023Q4';
 
@@ -31,11 +31,20 @@ class LocalStorage {
     throw new Error('unknown value stored with key user');
   }
 
+  public getHints(key: string): string | null {
+    const hints = localStorage.getItem(`${LocalStoragePrefix}_${key}`);
+    return hints;
+  }
+
   public checkUser(key: string): boolean {
     return !!LocalStorage.getItem(`${LocalStoragePrefix}_${key}`);
   }
 
   private static isUser(value: unknown): value is User {
+    return Boolean(value) && typeof value === 'object';
+  }
+
+  private static isHints(value: unknown): value is Hints {
     return Boolean(value) && typeof value === 'object';
   }
 

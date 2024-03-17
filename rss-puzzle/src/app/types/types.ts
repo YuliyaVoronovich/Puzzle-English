@@ -9,3 +9,9 @@ export interface User {
   name: string;
   surname: string;
 }
+
+export type Hints = {
+  translate: boolean;
+  audio: boolean;
+  picture: boolean;
+};

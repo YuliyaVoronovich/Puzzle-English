@@ -1,5 +1,51 @@
 .game-header {
-  height: 40px;
   margin-bottom: 30px;
-  background: #d3ecf1;
+}
+
+.toolbar-hints {
+  display: flex;
+  flex-direction: row;
+  gap: 5px;
+  align-self: center;
+
+  border-radius: 5px;
+}
+
+.icon-toolbar {
+  display: block;
+  width: 30px;
+  height: 30px;
+}
+
+.icon-button {
+  cursor: pointer;
+
+  display: block;
+
+  width: 30px;
+  height: 30px;
+
+  background-repeat: no-repeat;
+  border: none;
+  border-radius: 5px;
+  box-shadow: 0 0 3px 0 #333536;
+
+  transition: 0.5s;
+}
+
+.hint-translate {
+  background-color: rgb(196 198 197);
+  border-radius: 5px;
+}
+
+.hint-translate .icon-button {
+  background: url('../../../../assets/images/hint_translate.png');
+}
+
+.hint-translate:active {
+  scale: 0.9;
+}
+
+.hint-translate.hint-on {
+  background-color: rgb(106 229 166);
 }

@@ -5,6 +5,7 @@ import Button from '../../components/button/button';
 import BaseComponent from '../../components/base-component';
 import Puzzle from '../../components/puzzle/puzzle';
 import { SettingsServise } from '../../services/settings.service';
+import type { Hints } from '../../types/types';
 
 export default class GamePage extends BaseComponent {
   private zIndexCoefficient = 10;
@@ -26,6 +27,8 @@ export default class GamePage extends BaseComponent {
   private buttonAutofill: BaseComponent;
 
   private buttonWrapper: BaseComponent;
+
+  private textHint: BaseComponent | undefined;
 
   constructor() {
     super({ tagName: 'div', className: 'game-wrapper' });
@@ -50,7 +53,7 @@ export default class GamePage extends BaseComponent {
     );
     this.inputPuzzles();
     this.appendChildren([
-      new Header(),
+      new Header(this.changeHints),
       this.fieldPicture,
       this.hintLine,
       this.linePuzzles,
@@ -58,6 +61,15 @@ export default class GamePage extends BaseComponent {
       this.createButtonLogout(),
     ]);
   }
+
+  public changeHints = (hints: Hints): void => {
+    console.log(hints);
+    if (hints.translate) {
+      this.hintLine.addClass('show');
+    } else {
+      this.hintLine.removeClass('show');
+    }
+  };
 
   private createFieldPicture(): BaseComponent {
     return new BaseComponent(
@@ -184,6 +196,14 @@ export default class GamePage extends BaseComponent {
     });
   }
 
+  private createHintTranslateText = (): BaseComponent => {
+    return new BaseComponent({
+      tagName: 'span',
+      className: 'text-hint',
+      textContent: SettingsServise.textHint(SettingsServise.currentIndexPhrase),
+    });
+  };
+
   private createLineHint(): BaseComponent {
     const iconHint = new BaseComponent({
       tagName: 'img',
@@ -191,10 +211,17 @@ export default class GamePage extends BaseComponent {
     });
     iconHint.setAttribute('src', './src/assets/images/hint.png');
     iconHint.setAttribute('alt', '');
-    return new BaseComponent(
+    this.textHint = new BaseComponent(
       {
         tagName: 'div',
-        className: 'game-field-hint',
+        className: 'text-hint-wrap',
+      },
+      this.createHintTranslateText(),
+    );
+    const hintLine = new BaseComponent(
+      {
+        tagName: 'div',
+        className: 'game-field-hint show',
       },
       new BaseComponent(
         {
@@ -203,12 +230,12 @@ export default class GamePage extends BaseComponent {
         },
         iconHint,
       ),
-      new BaseComponent({
-        tagName: 'span',
-        className: 'text-hint',
-        textContent: SettingsServise.textHint(SettingsServise.currentIndexPhrase),
-      }),
+      this.textHint,
     );
+    if (LocalStorageServise.getHints('translate_hint') === 'false') {
+      hintLine.removeClass('show');
+    }
+    return hintLine;
   }
 
   public clickPuzzleLine = (tile: BaseComponent): void => {
@@ -281,11 +308,18 @@ export default class GamePage extends BaseComponent {
       this.buttonContinue.removeClass('hide');
       this.buttonCheck.addClass('hide');
       this.fieldLines[SettingsServise.currentIndexPhrase].addClass('block');
+      if (!SettingsServise.hints.translate) {
+        this.textHint?.addClass('show');
+        this.hintLine.addClass('show');
+      }
     }
   }
 
   public moveToNextRound(): void {
     this.buttonAutofill.removeClass('hide');
+    this.hintLine.removeClass('show');
+    this.textHint?.removeClass('show');
+
     if (SettingsServise.currentIndexPhrase === SettingsServise.countOfLines - 1) {
       this.moveToNextPicture();
     } else {
@@ -297,7 +331,7 @@ export default class GamePage extends BaseComponent {
           }
         });
         this.gameLine.setHTML('');
-        this.hintLine.setHTML('');
+        this.textHint?.destroyChildren();
         SettingsServise.moveXCurrentPosition = 0;
         SettingsServise.moveXPositions = [];
         SettingsServise.moveYCurrentPosition = 0;
@@ -305,7 +339,7 @@ export default class GamePage extends BaseComponent {
         SettingsServise.positionsCards();
         this.generatePuzzles();
         this.inputPuzzles();
-        this.hintLine.append(this.createLineHint());
+        this.textHint?.append(this.createHintTranslateText());
         //  this.gameLine.appendChildren(this.generatePuzzles());
         this.buttonContinue.addClass('hide');
         this.buttonCheck.addClass('hide');
@@ -347,6 +381,7 @@ export default class GamePage extends BaseComponent {
     this.generatePuzzles();
     this.inputPuzzles();
     this.appendChildren([
+      new Header(this.changeHints),
       this.fieldPicture,
       this.hintLine,
       this.linePuzzles,

@@ -92,6 +92,12 @@
 
   width: 100%;
   padding: 5px 0 0;
+
+  visibility: hidden;
+}
+
+.game-field-hint.show {
+  visibility: visible;
 }
 
 .icon-hint {
@@ -101,9 +107,14 @@
   transition: 0.3s;
 }
 
+.text-hint-wrap {
+  display: flex;
+  align-items: center;
+}
+
 .text-hint {
   font-size: 14px;
-  color: #f08585;
+  color: #d4d8a3;
 
   visibility: hidden;
   opacity: 0;
@@ -111,7 +122,12 @@
   transition: 0.5s;
 }
 
-.icon-hint:hover ~ .text-hint {
+.text-hint-wrap.show .text-hint {
+  visibility: visible;
+  opacity: 1;
+}
+
+.icon-hint:hover ~ .text-hint-wrap .text-hint {
   visibility: visible;
   opacity: 1;
 }
