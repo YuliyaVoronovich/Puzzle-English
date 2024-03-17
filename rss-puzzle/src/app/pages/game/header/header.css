@@ -51,15 +51,9 @@
   transition: 0.5s;
 }
 
-.toolbar-sound.active {
-  transform: scale(1);
-  filter: drop-shadow(0 0 12px rgb(236 222 142));
-  box-shadow: 0 0 0 0 rgb(0 0 0 / 100%);
-  animation: pulse 0.5s ease-in-out infinite;
-}
-
 .hint-translate,
-.hint-background {
+.hint-background,
+.hint-audio {
   padding: 2px;
   background-color: rgb(196 198 197);
   border-radius: 5px;
@@ -73,8 +67,31 @@
   background: url('../../../../assets/images/hint_background.png');
 }
 
+.hint-audio .icon-button {
+  background: url('../../../../assets/images/hint_audio.png');
+}
+
+.toolbar-sound {
+  visibility: hidden;
+  opacity: 0;
+  transition: 0.5s;
+}
+
+.toolbar-sound.active {
+  transform: scale(1);
+  filter: drop-shadow(0 0 12px rgb(236 222 142));
+  box-shadow: 0 0 0 0 rgb(0 0 0 / 100%);
+  animation: pulse 0.5s ease-in-out infinite;
+}
+
+.toolbar-sound.show {
+  visibility: visible;
+  opacity: 1;
+  transition: 0.7s;
+}
+
 .toolbar-sound .icon-button-sound {
-  background: url('../../../../assets/images/sound1.png');
+  background: url('../../../../assets/images/sound.png');
 }
 
 .toolbar-sound:hover {
@@ -82,12 +99,14 @@
 }
 
 .hint-translate:active,
-.hint-background:active {
+.hint-background:active,
+.hint-audion:active {
   scale: 0.9;
 }
 
 .hint-translate.hint-on,
-.hint-background.hint-on {
+.hint-background.hint-on,
+.hint-audio.hint-on {
   background-color: rgb(106 229 166);
 }
 

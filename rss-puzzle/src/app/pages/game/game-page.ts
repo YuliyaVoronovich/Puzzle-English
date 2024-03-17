@@ -31,6 +31,8 @@ export default class GamePage extends BaseComponent {
 
   private textHint: BaseComponent | undefined;
 
+  private headerPage: Header;
+
   // private arrayTiles: HTMLCollection;
 
   private showBackgroundOnCard = true;
@@ -47,6 +49,7 @@ export default class GamePage extends BaseComponent {
     this.buttonCheck = this.createButtonCheck();
     this.buttonAutofill = this.createButtonAutofill();
     this.hintLine = this.createLineHint();
+    this.headerPage = new Header(this.changeHintTranslate, this.changeHintsBackground);
     this.buttonWrapper = new BaseComponent(
       {
         tagName: 'div',
@@ -58,7 +61,7 @@ export default class GamePage extends BaseComponent {
     );
     this.inputPuzzles();
     this.appendChildren([
-      new Header(this.changeHintTranslate, this.changeHintsBackground),
+      this.headerPage,
       this.fieldPicture,
       this.hintLine,
       this.linePuzzles,
@@ -321,12 +324,18 @@ export default class GamePage extends BaseComponent {
       if (!SettingsServise.hints.translate) {
         this.textHint?.addClass('show');
       }
+      if (!SettingsServise.hints.audio) {
+        this.headerPage.toolbarSound.addClass('show');
+      }
     }
   }
 
   public moveToNextRound(): void {
     this.buttonAutofill.removeClass('hide');
     this.textHint?.removeClass('show');
+    if (!SettingsServise.hints.audio) {
+      this.headerPage.toolbarSound.removeClass('show');
+    }
 
     if (SettingsServise.currentIndexPhrase === SettingsServise.countOfLines - 1) {
       this.moveToNextPicture();
@@ -385,10 +394,11 @@ export default class GamePage extends BaseComponent {
     );
     this.linePuzzles = this.createLinePuzzles();
     this.hintLine = this.createLineHint();
+    this.headerPage = new Header(this.changeHintTranslate, this.changeHintsBackground);
     this.generatePuzzles();
     this.inputPuzzles();
     this.appendChildren([
-      new Header(this.changeHintTranslate, this.changeHintsBackground),
+      this.headerPage,
       this.fieldPicture,
       this.hintLine,
       this.linePuzzles,
