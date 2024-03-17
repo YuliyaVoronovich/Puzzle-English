@@ -32,7 +32,7 @@
 
 @keyframes move {
   from {
-    transform: translate(100%) translateY(50%);
+    transform: translate(50%) translateY(30%);
   }
 
   to {
@@ -88,6 +88,7 @@
   height: 15px;
 
   background-color: #2f68cb;
+  background-size: 700px auto;
   border-radius: 50%;
 }
 

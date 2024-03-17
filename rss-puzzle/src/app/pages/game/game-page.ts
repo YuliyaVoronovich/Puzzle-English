@@ -111,8 +111,8 @@ export default class GamePage extends BaseComponent {
           index,
           SettingsServise.widthCard(word),
           SettingsServise.heigthOfLine,
-          /* SettingsServise.moveXPositions[index],
-          SettingsServise.moveYPositions[SettingsServise.currentIndexPhrase], */
+          SettingsServise.moveXPositions[index],
+          SettingsServise.moveYPositions[SettingsServise.currentIndexPhrase],
           this.clickPuzzle,
         );
       })
@@ -262,10 +262,13 @@ export default class GamePage extends BaseComponent {
       if (arrayTiles[i].classList.contains('empty-card')) {
         //  arrayTiles[i].setAttribute('style', `${card.getAttribute('style')}`);
         arrayTiles[i].setAttribute('border', `none`);
-        arrayTiles[i].setAttribute(
-          'style',
-          `z-index: ${SettingsServise.numWordsInPhrase(SettingsServise.currentIndexPhrase) * this.zIndexCoefficient - this.zIndexCoefficient * i}; ${card.getAttribute('style')}`,
-        );
+        if (card instanceof HTMLElement) {
+          arrayTiles[i].setAttribute(
+            'style',
+            `z-index: ${SettingsServise.numWordsInPhrase(SettingsServise.currentIndexPhrase) * this.zIndexCoefficient - this.zIndexCoefficient * i};
+          width: ${card.style.width}, height: ${card.style.height}`,
+          );
+        }
         element.classList.add('show-empty-card');
         arrayTiles[i].classList.remove('empty-card');
         arrayTiles[i].append(card);
@@ -310,14 +313,12 @@ export default class GamePage extends BaseComponent {
       this.fieldLines[SettingsServise.currentIndexPhrase].addClass('block');
       if (!SettingsServise.hints.translate) {
         this.textHint?.addClass('show');
-        this.hintLine.addClass('show');
       }
     }
   }
 
   public moveToNextRound(): void {
     this.buttonAutofill.removeClass('hide');
-    this.hintLine.removeClass('show');
     this.textHint?.removeClass('show');
 
     if (SettingsServise.currentIndexPhrase === SettingsServise.countOfLines - 1) {
@@ -399,9 +400,11 @@ export default class GamePage extends BaseComponent {
         .sort((a, b) => Number(a.getAttribute('data')) - Number(b.getAttribute('data')))
         .forEach((item, index) => {
           // arrayTiles[index].setAttribute('style', `${item.getAttribute('style')}`);
+          // console.log(item.style.width);
+          // console.log(item.style.height);
           arrayTiles[index].setAttribute(
             'style',
-            `z-index: ${SettingsServise.numWordsInPhrase(SettingsServise.currentIndexPhrase) * 10 - 10 * index}; ${item.getAttribute('style')}`,
+            `z-index: ${SettingsServise.numWordsInPhrase(SettingsServise.currentIndexPhrase) * 10 - 10 * index}; width: ${item.style.width}; height: ${item.style.height}`,
           );
           arrayTiles[index].setAttribute('border', `none`);
           if (item.parentNode instanceof HTMLElement) {
