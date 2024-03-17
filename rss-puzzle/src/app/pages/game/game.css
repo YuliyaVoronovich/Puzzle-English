@@ -10,7 +10,7 @@
 .game-field {
   width: 100%;
   height: auto;
-  background-color: rgb(229 225 225);
+  background-color: rgb(219 218 186);
   background-size: 700px auto;
 }
 
@@ -31,7 +31,7 @@
   align-items: center;
   justify-content: center;
 
-  background: rgb(229 225 225);
+  background: rgb(219 218 186);
 }
 
 .field-line.block {

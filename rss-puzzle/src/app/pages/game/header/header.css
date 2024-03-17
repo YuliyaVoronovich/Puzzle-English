@@ -74,7 +74,11 @@
 }
 
 .toolbar-sound .icon-button-sound {
-  background: url('../../../../assets/images/sound.png');
+  background: url('../../../../assets/images/sound1.png');
+}
+
+.toolbar-sound:hover {
+  scale: 1.1;
 }
 
 .hint-translate:active,
