@@ -308,10 +308,10 @@ export default class GamePage extends BaseComponent {
     let error = false;
     for (let i = 0; i < arrayTiles.length; i += 1) {
       if (Number(arrayTiles[i].children[0].getAttribute('data')) !== i) {
-        arrayTiles[i].classList.add('error');
+        arrayTiles[i].classList.add('wrong');
         error = true;
       } else {
-        arrayTiles[i].classList.remove('error');
+        arrayTiles[i].classList.remove('wrong');
       }
       if (arrayTiles[i].textContent) {
         resultPhrase += `${arrayTiles[i].textContent} `;

@@ -50,7 +50,7 @@
   padding: 8px 10px;
 }
 
-.tile-card.error > .card > .word {
+.tile-card.wrong > .card > .word {
   color: rgb(230 109 109);
 }
 
