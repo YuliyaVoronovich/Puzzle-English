@@ -1,4 +1,5 @@
 import './game.css';
+
 import { Header } from './header/header';
 import { LocalStorageServise } from '../../services/local-storage.service';
 import { Button } from '../../components/button/button';
@@ -217,7 +218,8 @@ export default class GamePage extends BaseComponent {
       tagName: 'img',
       className: 'icon-hint',
     });
-    iconHint.setAttribute('src', '/src/assets/images/hint.png');
+    const img = new URL('../../../assets/images/hint.png', import.meta.url).href;
+    iconHint.setAttribute('src', img);
     iconHint.setAttribute('alt', '');
     this.textHint = new BaseComponent(
       {

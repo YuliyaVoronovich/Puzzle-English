@@ -62,7 +62,7 @@ export class Puzzle extends BaseComponent {
     cardBlock.setAttribute('style', `width:${width}px;${heightPuzzle};`);
     //  console.log(showBack);
     if (showBack) {
-      cardBlock.getNode().style.backgroundImage = `url(/src/app/data/images/${SettingsServise.mainPicture})`;
+      cardBlock.getNode().style.backgroundImage = `url(https://raw.githubusercontent.com/rolling-scopes-school/rss-puzzle-data/main/images/${SettingsServise.mainPicture})`;
       cardBlock.getNode().style.backgroundPosition = `-${positionX}px  -${positionY}px`;
     }
 
@@ -85,7 +85,7 @@ export class Puzzle extends BaseComponent {
     const posX = positionX + width;
     const posY = positionY + this.positionYOnset;
     if (showBack) {
-      after.getNode().style.backgroundImage = `url(/src/app/data/images/${SettingsServise.mainPicture})`;
+      after.getNode().style.backgroundImage = `url(https://raw.githubusercontent.com/rolling-scopes-school/rss-puzzle-data/main/images/${SettingsServise.mainPicture})`;
       after.getNode().style.backgroundPosition = `-${posX}px  -${posY}px`;
     }
     return after;
