@@ -122,7 +122,6 @@ export default class GamePage extends BaseComponent {
 
   private generatePuzzles(): Puzzle[] {
     const phrase = SettingsServise.currentPhrase(SettingsServise.currentIndexPhrase);
-    console.log(this.showBackgroundOnCard);
 
     return phrase
       .split(' ')
@@ -218,7 +217,7 @@ export default class GamePage extends BaseComponent {
       tagName: 'img',
       className: 'icon-hint',
     });
-    iconHint.setAttribute('src', './src/assets/images/hint.png');
+    iconHint.setAttribute('src', '/src/assets/images/hint.png');
     iconHint.setAttribute('alt', '');
     this.textHint = new BaseComponent(
       {

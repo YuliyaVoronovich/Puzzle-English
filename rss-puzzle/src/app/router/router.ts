@@ -13,10 +13,8 @@ export default class Router {
   }
 
   public handleLocation(): void {
-    console.log(window.location.pathname);
     const isUser: boolean = LocalStorageServise.checkUser('user');
-    const arrayPath = window.location.pathname.split('/');
-    const pathname = arrayPath[arrayPath.length - 1];
+    const pathname = window.location.hash.slice(1);
 
     let currentPath;
     if (!isUser) {
@@ -26,8 +24,6 @@ export default class Router {
     } else {
       currentPath = `/${pathname}`;
     }
-    window.history.pushState({}, '', pathname);
-
     this.setViewContent(currentPath)
       .then((data) => {
         this.routerOutlet.setContent(data);

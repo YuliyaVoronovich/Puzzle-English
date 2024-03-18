@@ -83,7 +83,7 @@ export default class LoginPage extends BaseComponent {
       onClick: (event): void => {
         event.preventDefault();
         this.saveDataToLocalStorage(event);
-        document.location.href = `./welcome`;
+        document.location.href = `#welcome`;
       },
     });
   }

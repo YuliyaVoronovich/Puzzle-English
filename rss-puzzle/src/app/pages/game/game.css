@@ -1,3 +1,7 @@
+.container {
+  background-image: none;
+}
+
 .game-wrapper {
   display: flex;
   flex-direction: column;
