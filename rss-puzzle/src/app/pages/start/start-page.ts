@@ -28,7 +28,7 @@ export default class StartPage extends BaseComponent {
       className: 'form-button page-button',
       textContent: 'START',
       onClick: (): void => {
-        document.location.href = `/rss-puzzle/game`;
+        document.location.href = `./game`;
       },
     });
   }

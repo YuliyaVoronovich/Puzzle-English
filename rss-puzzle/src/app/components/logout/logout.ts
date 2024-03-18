@@ -13,7 +13,7 @@ export class Logout extends Button {
         LocalStorageServise.deleteData('translate_hint');
         LocalStorageServise.deleteData('audio_hint');
         LocalStorageServise.deleteData('picture_hint');
-        document.location.href = `/rss-puzzle/`;
+        document.location.href = `./`;
         window.history.pushState({}, '', '/');
       },
     });
