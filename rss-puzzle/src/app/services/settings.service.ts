@@ -2,6 +2,8 @@ import { DataServise } from './data.service';
 import { LocalStorageServise } from './local-storage.service';
 
 class Settings {
+  public currentIndexLevel = 1;
+
   public currentIndexPicture = 0;
 
   public currentIndexPhrase = 0;
@@ -19,6 +21,10 @@ class Settings {
   private countLines = 10;
 
   public heigthOfLine = 40;
+
+  public countOfLevels = 6;
+
+  public countRoundsOfTheLevel = 6;
 
   public moveXCurrentPosition = 0;
 
@@ -38,24 +44,30 @@ class Settings {
     const img = new Image();
     img.src = `src/app/data/images/${this.mainPicture}`;
     this.heigthOfLine = ((this.widthPicture / img.width) * img.height) / this.countLines || this.heigthOfLine;
+    this.countRoundsOfTheLevel = this.getData(this.currentIndexLevel);
+    console.log(this.countRoundsOfTheLevel);
     this.positionsCards();
     this.setMainPicture();
   }
 
+  public getData(level: number = this.currentIndexLevel): number {
+    return DataServise.dataRounds(level).length;
+  }
+
   public textHint(index: number = this.currentIndexPhrase): string {
-    return DataServise.dataRounds[this.currentIndexPicture].words[index].textExampleTranslate;
+    return DataServise.dataRounds(this.currentIndexLevel)[this.currentIndexPicture].words[index].textExampleTranslate;
   }
 
   public currentAudio(index: number = this.currentIndexPhrase): string {
-    return DataServise.dataRounds[this.currentIndexPicture].words[index].audioExample;
+    return DataServise.dataRounds(this.currentIndexLevel)[this.currentIndexPicture].words[index].audioExample;
   }
 
   public currentPhrase(index: number = this.currentIndexPhrase): string {
-    return DataServise.dataRounds[this.currentIndexPicture].words[index].textExample;
+    return DataServise.dataRounds(this.currentIndexLevel)[this.currentIndexPicture].words[index].textExample;
   }
 
   public currentMainPicture(index: number = this.currentIndexPicture): string {
-    return DataServise.dataRounds[index].levelData.imageSrc;
+    return DataServise.dataRounds(this.currentIndexLevel)[index].levelData.imageSrc;
   }
 
   public get countOfLines(): number {
@@ -71,15 +83,19 @@ class Settings {
   }
 
   public setMainPicture(): void {
-    this.mainPicture = DataServise.dataRounds[this.currentIndexPicture].levelData.imageSrc;
+    this.mainPicture = DataServise.dataRounds(this.currentIndexLevel)[this.currentIndexPicture].levelData.imageSrc;
   }
 
   public numWordsInPhrase(indexPhrase: number = this.currentIndexPhrase): number {
-    return DataServise.dataRounds[this.currentIndexPicture].words[indexPhrase].textExample.split(' ').length;
+    return DataServise.dataRounds(this.currentIndexLevel)[this.currentIndexPicture].words[
+      indexPhrase
+    ].textExample.split(' ').length;
   }
 
   public numSymbolsInPhrase(indexPhrase: number = this.currentIndexPhrase): number {
-    return DataServise.dataRounds[this.currentIndexPicture].words[indexPhrase].textExample.split(' ').join('').length;
+    return DataServise.dataRounds(this.currentIndexLevel)
+      [this.currentIndexPicture].words[indexPhrase].textExample.split(' ')
+      .join('').length;
   }
 
   public positionsCards = (): void => {

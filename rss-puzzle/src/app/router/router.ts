@@ -4,13 +4,16 @@ import { LocalStorageServise } from '../services/local-storage.service';
 
 export default class Router {
   constructor(private routerOutlet: Page) {
+    //  this.handleLocation();
+    window.addEventListener('hashchange', this.handleLocation.bind(this));
     this.handleLocation();
-    window.onpopstate = (): void => {
-      this.handleLocation();
-    };
+    // window.onpopstate = (): void => {
+    //   this.handleLocation();
+    // };
   }
 
   public handleLocation(): void {
+    console.log(window.location.pathname);
     const isUser: boolean = LocalStorageServise.checkUser('user');
     const arrayPath = window.location.pathname.split('/');
     const pathname = arrayPath[arrayPath.length - 1];

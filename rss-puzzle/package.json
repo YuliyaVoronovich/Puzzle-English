@@ -3,6 +3,7 @@
   "private": true,
   "version": "0.0.0",
   "type": "module",
+  "homepage": "https://rolling-scopes-school.github.io/yuliyavoronovich-JSFE2023Q4/rss-puzzle",
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
@@ -11,7 +12,8 @@
     "ci:format": "prettier --check .",
     "lint": "eslint --ext ts .",
     "lint:fix": "eslint --ext ts --fix .",
-    "prepare": "cd .. && husky rss-puzzle/.husky"
+    "prepare": "cd .. && husky rss-puzzle/.husky",
+    "deploy": "gh-pages -d dist -e rss-puzzle"
   },
   "devDependencies": {
     "@commitlint/cli": "^19.0.3",
@@ -25,6 +27,7 @@
     "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-import": "^2.25.2",
     "eslint-plugin-prettier": "^5.1.3",
+    "gh-pages": "6.1.1",
     "husky": "^9.0.11",
     "lint-staged": "^15.2.2",
     "prettier": "3.2.5",

@@ -5,11 +5,14 @@ import { SettingsServise } from '../../../services/settings.service';
 import { LocalStorageServise } from '../../../services/local-storage.service';
 import type { Hints } from '../../../types/types';
 import { AudioServise } from '../../../services/audio.service';
+// import { Select } from '../../../components/select/select';
 
 export class Header extends BaseComponent {
   private hintTranslate: BaseComponent;
 
   public toolbarSound: BaseComponent;
+
+  // public selectLevel: BaseComponent;
 
   private isSound = false;
 
@@ -25,6 +28,7 @@ export class Header extends BaseComponent {
     const iconHintBackground = this.createButtonBackground(hihtLocalStorageBackground);
     const iconHintAudio = this.createButtonAudio(hihtLocalStorageAudio);
     this.toolbarSound = this.createMute(hihtLocalStorageAudio);
+    // this.selectLevel = this.createSelectLevel();
     this.hintTranslate = new BaseComponent(
       {
         tagName: 'div',
@@ -34,7 +38,14 @@ export class Header extends BaseComponent {
       iconHintBackground,
       iconHintAudio,
     );
-    this.appendChildren([this.hintTranslate, this.toolbarSound]);
+    const selectWrapper = new BaseComponent(
+      {
+        tagName: 'div',
+        className: 'select-wrapper',
+      },
+      // this.selectLevel,
+    );
+    this.appendChildren([this.hintTranslate, this.toolbarSound, selectWrapper]);
   }
 
   private createMute = (hasHint: boolean): BaseComponent => {
@@ -143,4 +154,11 @@ export class Header extends BaseComponent {
     element.toggleClass('hint-on');
     SettingsServise.hints.audio = !hint;
   }
+
+  // private createSelectLevel(): BaseComponent {
+  //   this.selectLevel = new Select({
+  //     className: 'select-level',
+  //   });
+  //   return this.selectLevel;
+  // }
 }
