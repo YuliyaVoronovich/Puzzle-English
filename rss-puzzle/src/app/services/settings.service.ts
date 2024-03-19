@@ -34,6 +34,12 @@ class Settings {
 
   public moveYPositions: number[] = [];
 
+  public infoPictureName: string;
+
+  public infoPictureAuthor: string;
+
+  public infoPictureYear: string;
+
   public hints = {
     translate: LocalStorageServise.getHints('translate_hint'),
     audio: LocalStorageServise.getHints('audio_hint'),
@@ -45,9 +51,24 @@ class Settings {
     img.src = `src/app/data/images/${this.mainPicture}`;
     this.heigthOfLine = ((this.widthPicture / img.width) * img.height) / this.countLines || this.heigthOfLine;
     this.countRoundsOfTheLevel = this.getData(this.currentIndexLevel);
-    console.log(this.countRoundsOfTheLevel);
+    this.infoPictureAuthor = this.getDataPictureAuthor(this.currentIndexLevel);
+    this.infoPictureYear = this.getDataPictureYear(this.currentIndexLevel);
+    this.infoPictureName = this.getDataPictureName(this.currentIndexLevel);
+    console.log(this.infoPictureName);
     this.positionsCards();
     this.setMainPicture();
+  }
+
+  public getDataPictureName(index: number = this.currentIndexPicture): string {
+    return DataServise.dataRounds(this.currentIndexLevel)[index].levelData.name;
+  }
+
+  public getDataPictureAuthor(index: number = this.currentIndexPicture): string {
+    return DataServise.dataRounds(this.currentIndexLevel)[index].levelData.author;
+  }
+
+  public getDataPictureYear(index: number = this.currentIndexPicture): string {
+    return DataServise.dataRounds(this.currentIndexLevel)[index].levelData.year;
   }
 
   public getData(level: number = this.currentIndexLevel): number {

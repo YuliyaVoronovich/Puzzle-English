@@ -34,6 +34,8 @@ export default class GamePage extends BaseComponent {
 
   private headerPage: Header;
 
+  public dopinfo: BaseComponent | undefined;
+
   // private arrayTiles: HTMLCollection;
 
   private showBackgroundOnCard = true;
@@ -91,13 +93,41 @@ export default class GamePage extends BaseComponent {
     // this.inputPuzzles();
   };
 
+  public createInfoPicture(): BaseComponent {
+    return new BaseComponent(
+      {
+        tagName: 'div',
+        className: 'dop-info-inner',
+      },
+      new BaseComponent({
+        tagName: 'span',
+        className: 'dop-info-author',
+        textContent: SettingsServise.getDataPictureAuthor(SettingsServise.currentIndexPicture),
+      }),
+      new BaseComponent({
+        tagName: 'span',
+        className: 'dop-info-name',
+        textContent: `${SettingsServise.getDataPictureName(SettingsServise.currentIndexPicture)} - (${SettingsServise.getDataPictureYear(SettingsServise.currentIndexPicture)})`,
+      }),
+    );
+  }
+
   private createFieldPicture(): BaseComponent {
+    this.dopinfo = new BaseComponent(
+      {
+        tagName: 'div',
+        className: 'dop-info',
+      },
+      this.createInfoPicture(),
+    );
+
     return new BaseComponent(
       {
         tagName: 'div',
         className: 'game-field',
       },
       ...this.generateLinesOfField(),
+      this.dopinfo,
     );
   }
 
@@ -257,7 +287,7 @@ export default class GamePage extends BaseComponent {
           this.linePuzzles.getNode().children[i].classList.remove('show-empty-card');
           tile.getNode().classList.add('empty-card');
           tile.getNode().removeAttribute('style');
-          tile.getNode().classList.remove('error');
+          tile.getNode().classList.remove('wrong');
           break;
         }
       }
@@ -319,6 +349,9 @@ export default class GamePage extends BaseComponent {
     }
     resultPhrase.trim();
     if (resultPhrase.trim() === SettingsServise.currentPhrase(SettingsServise.currentIndexPhrase) && !error) {
+      if (SettingsServise.currentIndexPhrase === SettingsServise.countOfLines - 1) {
+        this.showFullPicture();
+      }
       this.buttonContinue.removeClass('hide');
       this.buttonCheck.addClass('hide');
       this.fieldLines[SettingsServise.currentIndexPhrase].addClass('block');
@@ -430,5 +463,19 @@ export default class GamePage extends BaseComponent {
     }
     this.checkRightPhrase();
     this.buttonAutofill.addClass('hide');
+  }
+
+  public showFullPicture(): void {
+    this.fieldLines.forEach((item) => {
+      item.addClass('opacity');
+    });
+    this.fieldPicture.setAttribute(
+      'style',
+      `background-image: url(https://raw.githubusercontent.com/rolling-scopes-school/rss-puzzle-data/main/images/${SettingsServise.mainPicture})`,
+    );
+    console.log(SettingsServise.currentIndexPicture);
+    this.dopinfo?.destroyChildren();
+    this.dopinfo?.append(this.createInfoPicture());
+    this.dopinfo?.addClass('show');
   }
 }

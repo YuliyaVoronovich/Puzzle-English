@@ -13,10 +13,37 @@
 }
 
 .game-field {
+  position: relative;
   width: 100%;
   height: auto;
-  background-color: rgb(219 218 186);
+  background-color: #dbdaba;
   background-size: 700px auto;
+}
+
+.dop-info.show {
+  visibility: visible;
+  opacity: 1;
+}
+
+.dop-info {
+  width: 100%;
+  height: 60px;
+  left: 0;
+  bottom: 0;
+  position: absolute;
+  text-align: center;
+  color: #1a3563;
+  background: #e0dada7d;
+  visibility: hidden;
+  opacity: 0;
+  transition: 1s;
+}
+
+.dop-info-inner {
+  display: flex;
+  flex-direction: column;
+  align-self: center;
+  gap: 3px;
 }
 
 .field-line {
@@ -27,6 +54,7 @@
 
   height: 40px;
   margin: 0;
+  transition: 1s;
 }
 
 .game-line {
@@ -37,6 +65,10 @@
   justify-content: center;
 
   background: rgb(219 218 186);
+}
+
+.field-line.opacity {
+  opacity: 0;
 }
 
 .field-line.block {
