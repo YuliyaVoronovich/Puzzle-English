@@ -48,7 +48,7 @@ class Settings {
 
   constructor() {
     const img = new Image();
-    img.src = `src/app/data/images/${this.mainPicture}`;
+    img.src = `https://raw.githubusercontent.com/rolling-scopes-school/rss-puzzle-data/main/images/${this.mainPicture}`;
     this.heigthOfLine = ((this.widthPicture / img.width) * img.height) / this.countLines || this.heigthOfLine;
     this.countRoundsOfTheLevel = this.getData(this.currentIndexLevel);
     this.infoPictureAuthor = this.getDataPictureAuthor(this.currentIndexLevel);
