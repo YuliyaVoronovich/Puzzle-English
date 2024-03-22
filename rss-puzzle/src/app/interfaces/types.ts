@@ -1,4 +1,4 @@
-export type StatusError = {
+export type StatusErrorValidation = {
   ok: true | false;
   error?: {
     message: string;

@@ -1,45 +1,41 @@
 import './puzzle.css';
-import { SettingsServise } from '../../services/settings.service';
+
+import { SettingsService } from '../../services/settings.service';
 import BaseComponent from '../base-component';
+import { MAIN_PATH } from '../../constants';
+
+type Card = {
+  word: string;
+  index: number;
+  width: number;
+  height: number;
+  positionX: number;
+  positionY: number;
+  showBack: boolean;
+  onClick?: (element: HTMLElement) => void;
+};
 
 export class Puzzle extends BaseComponent {
-  private onClick;
+  private readonly positionYOnset = 12;
 
-  public positionYOnset = 12;
-
-  constructor(
-    word: string,
-    index: number,
-    width: number,
-    height: number,
-    positionX: number,
-    positionY: number,
-    showBack: boolean,
-    onClick: (element: HTMLElement) => void,
-  ) {
+  constructor({ word, index, width, height, positionX, positionY, showBack, onClick }: Card) {
     super({
       tagName: 'div',
       className: 'tile-card',
     });
 
-    this.append(this.createCard(word, index, width, height, positionX, positionY, showBack));
-    this.onClick = onClick;
-    if (this.onClick) {
+    this.append(this.createCard({ word, index, width, height, positionX, positionY, showBack }));
+    if (!onClick) {
+      return;
+    }
+    if (onClick) {
       this.addListener('click', () => {
-        this.onClick(this.getNode());
+        onClick(this.getNode());
       });
     }
   }
 
-  public createCard(
-    word: string,
-    index: number,
-    width: number,
-    height: number,
-    positionX: number,
-    positionY: number,
-    showBack: boolean,
-  ): BaseComponent {
+  public createCard({ word, index, width, height, positionX, positionY, showBack }: Card): BaseComponent {
     const cardBlock = new BaseComponent(
       {
         tagName: 'div',
@@ -54,15 +50,11 @@ export class Puzzle extends BaseComponent {
         this.createAfter(index, positionX, positionY, width, showBack),
       ),
     );
-    let heightPuzzle = '';
-    if (height) {
-      heightPuzzle = `height:${height}px`;
-    }
+    const puzzleHeight = height ? `height:${height}px` : '';
 
-    cardBlock.setAttribute('style', `width:${width}px;${heightPuzzle};`);
-    //  console.log(showBack);
+    cardBlock.setAttribute('style', `width:${width}px;${puzzleHeight};`);
     if (showBack) {
-      cardBlock.getNode().style.backgroundImage = `url(https://raw.githubusercontent.com/rolling-scopes-school/rss-puzzle-data/main/images/${SettingsServise.mainPicture})`;
+      cardBlock.getNode().style.backgroundImage = `url(${MAIN_PATH}${SettingsService.mainPicture})`;
       cardBlock.getNode().style.backgroundPosition = `-${positionX}px  -${positionY}px`;
     }
 
@@ -79,13 +71,13 @@ export class Puzzle extends BaseComponent {
     showBack: boolean,
   ): BaseComponent {
     const after = new BaseComponent({ tagName: 'span', className: `after` });
-    if (index === SettingsServise.numWordsInPhrase(SettingsServise.currentIndexPhrase) - 1) {
+    if (index === SettingsService.numWordsInPhrase(SettingsService.currentIndexPhrase) - 1) {
       after.setAttribute('style', `backgroundColor: #fff; left:0`);
     }
     const posX = positionX + width;
     const posY = positionY + this.positionYOnset;
     if (showBack) {
-      after.getNode().style.backgroundImage = `url(https://raw.githubusercontent.com/rolling-scopes-school/rss-puzzle-data/main/images/${SettingsServise.mainPicture})`;
+      after.getNode().style.backgroundImage = `url(${MAIN_PATH}${SettingsService.mainPicture})`;
       after.getNode().style.backgroundPosition = `-${posX}px  -${posY}px`;
     }
     return after;

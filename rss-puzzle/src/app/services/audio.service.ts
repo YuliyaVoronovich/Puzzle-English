@@ -1,9 +1,9 @@
-import { SettingsServise } from './settings.service';
+import { MAIN_PATH_FILES } from '../constants';
+import { SettingsService } from './settings.service';
 
 class Sound {
   public play(indexWord: number, audioEnd: () => void): void {
-    const path = 'https://github.com/rolling-scopes-school/rss-puzzle-data/raw/main/';
-    const audio = new Audio(path + SettingsServise.currentAudio(indexWord));
+    const audio = new Audio(MAIN_PATH_FILES + SettingsService.currentAudio(indexWord));
     audio
       .play()
       .then(() => {
@@ -17,4 +17,4 @@ class Sound {
   }
 }
 
-export const AudioServise = new Sound();
+export const AudioService = new Sound();

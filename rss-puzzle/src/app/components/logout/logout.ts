@@ -1,18 +1,18 @@
 import './logout.css';
-import { LocalStorageServise } from '../../services/local-storage.service';
+import { LocalStorageService } from '../../services/local-storage.service';
 import { Button } from '../button/button';
 
-export class Logout extends Button {
+export class LogoutButton extends Button {
   constructor() {
     super({
       className: 'button-logout',
       textContent: 'LOGOUT',
       onClick: (event): void => {
         event.preventDefault();
-        LocalStorageServise.deleteData('user');
-        LocalStorageServise.deleteData('translate_hint');
-        LocalStorageServise.deleteData('audio_hint');
-        LocalStorageServise.deleteData('picture_hint');
+        LocalStorageService.deleteData('user');
+        LocalStorageService.deleteData('translate_hint');
+        LocalStorageService.deleteData('audio_hint');
+        LocalStorageService.deleteData('picture_hint');
         document.location.href = `./`;
         window.history.pushState({}, '', '/');
       },

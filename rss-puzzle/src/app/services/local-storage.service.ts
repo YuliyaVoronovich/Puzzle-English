@@ -1,10 +1,10 @@
-import type { Hints, User } from '../types/types';
+import type { Hints, User } from '../interfaces/types';
 
-const LocalStoragePrefix = 'yuliyavoronovich-JSFE2023Q4';
+const localStoragePrefix = 'yuliyavoronovich-JSFE2023Q4';
 
 class LocalStorage {
   public setItem(key: string, value: unknown): void {
-    localStorage.setItem(`${LocalStoragePrefix}_${key}`, JSON.stringify(value));
+    localStorage.setItem(`${localStoragePrefix}_${key}`, JSON.stringify(value));
   }
 
   private static getItem(key: string): unknown {
@@ -18,7 +18,7 @@ class LocalStorage {
   }
 
   public getUser(key: string): User | null {
-    const user = LocalStorage.getItem(`${LocalStoragePrefix}_${key}`);
+    const user = LocalStorage.getItem(`${localStoragePrefix}_${key}`);
 
     if (!user) {
       return null;
@@ -32,12 +32,12 @@ class LocalStorage {
   }
 
   public getHints(key: string): boolean {
-    const hints = localStorage.getItem(`${LocalStoragePrefix}_${key}`);
+    const hints = localStorage.getItem(`${localStoragePrefix}_${key}`);
     return hints === 'true';
   }
 
   public checkUser(key: string): boolean {
-    return !!LocalStorage.getItem(`${LocalStoragePrefix}_${key}`);
+    return !!LocalStorage.getItem(`${localStoragePrefix}_${key}`);
   }
 
   private static isUser(value: unknown): value is User {
@@ -49,7 +49,7 @@ class LocalStorage {
   }
 
   public deleteData(key: string): void {
-    localStorage.removeItem(`${LocalStoragePrefix}_${key}`);
+    localStorage.removeItem(`${localStoragePrefix}_${key}`);
   }
 }
-export const LocalStorageServise = new LocalStorage();
+export const LocalStorageService = new LocalStorage();

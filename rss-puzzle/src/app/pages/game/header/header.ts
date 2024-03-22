@@ -1,34 +1,27 @@
 import './header.css';
 import BaseComponent from '../../../components/base-component';
 import { Button } from '../../../components/button/button';
-import { SettingsServise } from '../../../services/settings.service';
-import { LocalStorageServise } from '../../../services/local-storage.service';
-import type { Hints } from '../../../types/types';
-import { AudioServise } from '../../../services/audio.service';
-// import { Select } from '../../../components/select/select';
+import { SettingsService } from '../../../services/settings.service';
+import { LocalStorageService } from '../../../services/local-storage.service';
+import type { Hints } from '../../../interfaces/types';
+import { AudioService } from '../../../services/audio.service';
 
 export class Header extends BaseComponent {
   private hintTranslate: BaseComponent;
 
   public toolbarSound: BaseComponent;
 
-  // public selectLevel: BaseComponent;
-
   private isSound = false;
 
-  constructor(
-    private onClickTranslate: (el: Hints) => void,
-    private onClickBackground: (el: Hints) => void,
-  ) {
+  constructor(private onClickTranslate: (el: Hints) => void) {
     super({ tagName: 'div', className: 'game-header' });
-    const hihtLocalStorageTranslate = LocalStorageServise.getHints('translate_hint');
-    const hihtLocalStorageBackground = LocalStorageServise.getHints('picture_hint');
-    const hihtLocalStorageAudio = LocalStorageServise.getHints('audio_hint');
+    const hihtLocalStorageTranslate = LocalStorageService.getHints('translate_hint');
+    const hihtLocalStorageBackground = LocalStorageService.getHints('picture_hint');
+    const hihtLocalStorageAudio = LocalStorageService.getHints('audio_hint');
     const iconHintTranslate = this.createButtonTranslate(hihtLocalStorageTranslate);
     const iconHintBackground = this.createButtonBackground(hihtLocalStorageBackground);
     const iconHintAudio = this.createButtonAudio(hihtLocalStorageAudio);
     this.toolbarSound = this.createMute(hihtLocalStorageAudio);
-    // this.selectLevel = this.createSelectLevel();
     this.hintTranslate = new BaseComponent(
       {
         tagName: 'div',
@@ -38,13 +31,10 @@ export class Header extends BaseComponent {
       iconHintBackground,
       iconHintAudio,
     );
-    const selectWrapper = new BaseComponent(
-      {
-        tagName: 'div',
-        className: 'select-wrapper',
-      },
-      // this.selectLevel,
-    );
+    const selectWrapper = new BaseComponent({
+      tagName: 'div',
+      className: 'select-wrapper',
+    });
     this.appendChildren([this.hintTranslate, this.toolbarSound, selectWrapper]);
   }
 
@@ -56,7 +46,6 @@ export class Header extends BaseComponent {
       },
       new Button({
         className: 'icon-button-sound',
-        textContent: '',
         onClick: (e): void => {
           if (this.isSound) {
             return;
@@ -64,7 +53,7 @@ export class Header extends BaseComponent {
           e.preventDefault();
           this.toolbarSound.addClass('active');
           this.isSound = true;
-          AudioServise.play(SettingsServise.currentIndexPhrase, () => {
+          AudioService.play(SettingsService.currentIndexPhrase, () => {
             this.toolbarSound.removeClass('active');
             this.isSound = false;
           });
@@ -84,10 +73,9 @@ export class Header extends BaseComponent {
       new Button({
         className: 'icon-button',
         textContent: '',
-        onClick: (e): void => {
-          e.preventDefault();
+        onClick: (): void => {
           this.toogleHintTranslate(hintButton);
-          this.onClickTranslate(SettingsServise.hints);
+          this.onClickTranslate(SettingsService.hints);
         },
       }),
     );
@@ -96,10 +84,10 @@ export class Header extends BaseComponent {
   }
 
   private toogleHintTranslate(element: BaseComponent): void {
-    const hint = LocalStorageServise.getHints('translate_hint');
-    LocalStorageServise.setItem('translate_hint', !hint);
+    const hint = LocalStorageService.getHints('translate_hint');
+    LocalStorageService.setItem('translate_hint', !hint);
     element.toggleClass('hint-on');
-    SettingsServise.hints.translate = !hint;
+    SettingsService.hints.translate = !hint;
   }
 
   private createButtonBackground(hasHint: boolean): BaseComponent {
@@ -110,10 +98,8 @@ export class Header extends BaseComponent {
       },
       new Button({
         className: 'icon-button',
-        onClick: (e): void => {
-          e.preventDefault();
+        onClick: (): void => {
           this.toogleHintBackground(hintButtonPicture);
-          this.onClickBackground(SettingsServise.hints);
         },
       }),
     );
@@ -122,10 +108,10 @@ export class Header extends BaseComponent {
   }
 
   private toogleHintBackground(element: BaseComponent): void {
-    const hint = LocalStorageServise.getHints('picture_hint');
-    LocalStorageServise.setItem('picture_hint', !hint);
+    const hint = LocalStorageService.getHints('picture_hint');
+    LocalStorageService.setItem('picture_hint', !hint);
     element.toggleClass('hint-on');
-    SettingsServise.hints.picture = !hint;
+    SettingsService.hints.picture = !hint;
   }
 
   private createButtonAudio(hasHint: boolean): BaseComponent {
@@ -136,11 +122,9 @@ export class Header extends BaseComponent {
       },
       new Button({
         className: 'icon-button',
-        onClick: (e): void => {
-          e.preventDefault();
+        onClick: (): void => {
           this.toogleHintAudio(hintButtonAudio);
           this.toolbarSound.toggleClass('show');
-          // this.onClickBackground(SettingsServise.hints);
         },
       }),
     );
@@ -149,16 +133,9 @@ export class Header extends BaseComponent {
   }
 
   private toogleHintAudio(element: BaseComponent): void {
-    const hint = LocalStorageServise.getHints('audio_hint');
-    LocalStorageServise.setItem('audio_hint', !hint);
+    const hint = LocalStorageService.getHints('audio_hint');
+    LocalStorageService.setItem('audio_hint', !hint);
     element.toggleClass('hint-on');
-    SettingsServise.hints.audio = !hint;
+    SettingsService.hints.audio = !hint;
   }
-
-  // private createSelectLevel(): BaseComponent {
-  //   this.selectLevel = new Select({
-  //     className: 'select-level',
-  //   });
-  //   return this.selectLevel;
-  // }
 }

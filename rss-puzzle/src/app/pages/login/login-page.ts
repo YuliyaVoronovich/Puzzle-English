@@ -3,7 +3,7 @@ import BaseComponent from '../../components/base-component';
 import { Input } from '../../components/input/input';
 import { Button } from '../../components/button/button';
 import { ValidationServise } from '../../services/validation.service';
-import { LocalStorageServise } from '../../services/local-storage.service';
+import { LocalStorageService } from '../../services/local-storage.service';
 
 export default class LoginPage extends BaseComponent {
   private inputName: BaseComponent;
@@ -34,7 +34,7 @@ export default class LoginPage extends BaseComponent {
           const result = this.checkValid(element.currentTarget, this.messageErrorTextName);
           const name = 'Name';
           this.checkValidation[name] = result;
-          this.checkButton();
+          this.checkLoginButton();
         }
       },
     });
@@ -51,13 +51,13 @@ export default class LoginPage extends BaseComponent {
           const result = this.checkValid(element.currentTarget, this.messageErrorTextSurname);
           const name = 'Surname';
           this.checkValidation[name] = result;
-          this.checkButton();
+          this.checkLoginButton();
         }
       },
     });
     this.messageErrorTextSurname = new BaseComponent({ tagName: 'span', className: 'error' });
 
-    this.buttonEnter = this.createButton();
+    this.buttonEnter = this.createLoginButton();
     this.viewWrapper();
   }
 
@@ -76,14 +76,14 @@ export default class LoginPage extends BaseComponent {
     this.append(inputsWrapper);
   }
 
-  private createButton(): BaseComponent {
+  private createLoginButton(): Button {
     return new Button({
       className: 'form-button login-button disabled',
       textContent: 'LOGIN',
       onClick: (event): void => {
         event.preventDefault();
         this.saveDataToLocalStorage(event);
-        document.location.href = `#welcome`;
+        window.location.href = `#welcome`;
       },
     });
   }
@@ -105,7 +105,7 @@ export default class LoginPage extends BaseComponent {
     errorElement.setTextContent(error);
   }
 
-  private checkButton(): void {
+  private checkLoginButton(): void {
     const result = Object.values(this.checkValidation).every((item) => item === true);
     this.buttonEnter.toggleClass('disabled', !result);
   }
@@ -115,11 +115,11 @@ export default class LoginPage extends BaseComponent {
     const name = this.inputName.getAttribute('value');
     const surname = this.inputSurname.getAttribute('value');
     if (name && surname) {
-      LocalStorageServise.setItem('user', { name, surname });
+      LocalStorageService.setItem('user', { name, surname });
     }
 
-    LocalStorageServise.setItem('translate_hint', true);
-    LocalStorageServise.setItem('audio_hint', true);
-    LocalStorageServise.setItem('picture_hint', true);
+    LocalStorageService.setItem('translate_hint', true);
+    LocalStorageService.setItem('audio_hint', true);
+    LocalStorageService.setItem('picture_hint', true);
   }
 }

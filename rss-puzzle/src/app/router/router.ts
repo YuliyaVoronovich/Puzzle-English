@@ -1,19 +1,15 @@
 import type BaseComponent from '../components/base-component';
 import type Page from '../pages/page';
-import { LocalStorageServise } from '../services/local-storage.service';
+import { LocalStorageService } from '../services/local-storage.service';
 
 export default class Router {
   constructor(private routerOutlet: Page) {
-    //  this.handleLocation();
-    window.addEventListener('hashchange', this.handleLocation.bind(this));
-    this.handleLocation();
-    // window.onpopstate = (): void => {
-    //   this.handleLocation();
-    // };
+    window.addEventListener('hashchange', this.handleLocationChange.bind(this));
+    this.handleLocationChange();
   }
 
-  public handleLocation(): void {
-    const isUser: boolean = LocalStorageServise.checkUser('user');
+  public handleLocationChange(): void {
+    const isUser: boolean = LocalStorageService.checkUser('user');
     const pathname = window.location.hash.slice(1);
 
     let currentPath;
@@ -25,8 +21,8 @@ export default class Router {
       currentPath = `/${pathname}`;
     }
     this.setViewContent(currentPath)
-      .then((data) => {
-        this.routerOutlet.setContent(data);
+      .then((curentPageView) => {
+        this.routerOutlet.setContent(curentPageView);
       })
       .catch(() => {});
   }

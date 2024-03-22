@@ -1,8 +1,8 @@
 import './start.css';
 import BaseComponent from '../../components/base-component';
 import { Button } from '../../components/button/button';
-import { LocalStorageServise } from '../../services/local-storage.service';
-import { Logout } from '../../components/logout/logout';
+import { LocalStorageService } from '../../services/local-storage.service';
+import { LogoutButton } from '../../components/logout/logout';
 
 export default class StartPage extends BaseComponent {
   constructor() {
@@ -20,7 +20,7 @@ export default class StartPage extends BaseComponent {
     });
     const buttonEnter = this.createButtonStart();
     const stiker = this.createSicker();
-    this.appendChildren([pageTitle, pageText, buttonEnter, stiker, new Logout()]);
+    this.appendChildren([pageTitle, pageText, buttonEnter, stiker, new LogoutButton()]);
   }
 
   private createButtonStart(): BaseComponent {
@@ -28,7 +28,7 @@ export default class StartPage extends BaseComponent {
       className: 'form-button page-button',
       textContent: 'START',
       onClick: (): void => {
-        document.location.href = `#game`;
+        window.location.href = `#game`;
       },
     });
   }
@@ -48,7 +48,7 @@ export default class StartPage extends BaseComponent {
   }
 
   private createGreeting(): string {
-    const user = LocalStorageServise.getUser('user');
+    const user = LocalStorageService.getUser('user');
     if (user) {
       return `Hello, ${user.name} ${user.surname}!`;
     }

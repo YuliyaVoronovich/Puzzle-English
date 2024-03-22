@@ -1,13 +1,14 @@
 import './game.css';
 
 import { Header } from './header/header';
-import { LocalStorageServise } from '../../services/local-storage.service';
+import { LocalStorageService } from '../../services/local-storage.service';
 import { Button } from '../../components/button/button';
 import BaseComponent from '../../components/base-component';
 import { Puzzle } from '../../components/puzzle/puzzle';
-import { SettingsServise } from '../../services/settings.service';
-import type { Hints } from '../../types/types';
-import { Logout } from '../../components/logout/logout';
+import { SettingsService } from '../../services/settings.service';
+import type { Hints } from '../../interfaces/types';
+import { LogoutButton } from '../../components/logout/logout';
+import { MAIN_PATH } from '../../constants';
 
 export default class GamePage extends BaseComponent {
   private zIndexCoefficient = 10;
@@ -36,23 +37,17 @@ export default class GamePage extends BaseComponent {
 
   public dopinfo: BaseComponent | undefined;
 
-  // private arrayTiles: HTMLCollection;
-
   private showBackgroundOnCard = true;
 
   constructor() {
     super({ tagName: 'div', className: 'game-wrapper' });
     this.fieldPicture = this.createFieldPicture();
-    // this.fieldPicture.setAttribute(
-    //   'style',
-    //   `background-image: url(src/app/data/images/${SettingsServise.mainPicture})`,
-    // );
     this.linePuzzles = this.createLinePuzzles();
     this.buttonContinue = this.createButtonContinue();
-    this.buttonCheck = this.createButtonCheck();
+    this.buttonCheck = this.createCheckButton();
     this.buttonAutofill = this.createButtonAutofill();
     this.hintLine = this.createLineHint();
-    this.headerPage = new Header(this.changeHintTranslate, this.changeHintsBackground);
+    this.headerPage = new Header(this.changeHintTranslate);
     this.buttonWrapper = new BaseComponent(
       {
         tagName: 'div',
@@ -69,28 +64,16 @@ export default class GamePage extends BaseComponent {
       this.hintLine,
       this.linePuzzles,
       this.buttonWrapper,
-      new Logout(),
+      new LogoutButton(),
     ]);
   }
 
   public changeHintTranslate = (hints: Hints): void => {
-    console.log(hints);
     if (hints.translate) {
       this.hintLine.addClass('show');
     } else {
       this.hintLine.removeClass('show');
     }
-  };
-
-  public changeHintsBackground = (hints: Hints): void => {
-    console.log(hints);
-    // if (hints.picture) {
-    //   this.showBackgroundOnCard = true;
-    // } else {
-    //   this.showBackgroundOnCard = false;
-    // }
-    // this.gameLine?.destroyChildren();
-    // this.inputPuzzles();
   };
 
   public createInfoPicture(): BaseComponent {
@@ -102,12 +85,12 @@ export default class GamePage extends BaseComponent {
       new BaseComponent({
         tagName: 'span',
         className: 'dop-info-author',
-        textContent: SettingsServise.getDataPictureAuthor(SettingsServise.currentIndexPicture),
+        textContent: SettingsService.getDataPictureAuthor(SettingsService.currentIndexPicture),
       }),
       new BaseComponent({
         tagName: 'span',
         className: 'dop-info-name',
-        textContent: `${SettingsServise.getDataPictureName(SettingsServise.currentIndexPicture)} - (${SettingsServise.getDataPictureYear(SettingsServise.currentIndexPicture)})`,
+        textContent: `${SettingsService.getDataPictureName(SettingsService.currentIndexPicture)} - (${SettingsService.getDataPictureYear(SettingsService.currentIndexPicture)})`,
       }),
     );
   }
@@ -132,13 +115,10 @@ export default class GamePage extends BaseComponent {
   }
 
   private createLinePuzzles(): BaseComponent {
-    this.gameLine = new BaseComponent(
-      {
-        tagName: 'div',
-        className: 'game-line',
-      },
-      // ...this.generatePuzzles(),
-    );
+    this.gameLine = new BaseComponent({
+      tagName: 'div',
+      className: 'game-line',
+    });
     return this.gameLine;
   }
 
@@ -146,34 +126,34 @@ export default class GamePage extends BaseComponent {
     const puzzles = this.generatePuzzles();
     for (let i = 0; i < puzzles.length; i += 1) {
       puzzles[i].getNode().style.zIndex =
-        `${SettingsServise.numWordsInPhrase(SettingsServise.currentIndexPhrase) * this.zIndexCoefficient - this.zIndexCoefficient * i}`;
+        `${SettingsService.numWordsInPhrase(SettingsService.currentIndexPhrase) * this.zIndexCoefficient - this.zIndexCoefficient * i}`;
       this.gameLine?.append(puzzles[i]);
     }
   }
 
   private generatePuzzles(): Puzzle[] {
-    const phrase = SettingsServise.currentPhrase(SettingsServise.currentIndexPhrase);
+    const phrase = SettingsService.currentPhrase(SettingsService.currentIndexPhrase);
 
     return phrase
       .split(' ')
       .map((word, index: number) => {
-        return new Puzzle(
+        return new Puzzle({
           word,
           index,
-          SettingsServise.widthCard(word),
-          SettingsServise.heigthOfLine,
-          SettingsServise.moveXPositions[index],
-          SettingsServise.moveYPositions[SettingsServise.currentIndexPhrase],
-          this.showBackgroundOnCard,
-          this.clickPuzzle,
-        );
+          width: SettingsService.widthCard(word),
+          height: SettingsService.heigthOfLine,
+          positionX: SettingsService.moveXPositions[index],
+          positionY: SettingsService.moveYPositions[SettingsService.currentIndexPhrase],
+          showBack: this.showBackgroundOnCard,
+          onClick: this.clickPuzzle,
+        });
       })
       .sort(() => Math.random() - 0.5);
   }
 
   private generateLinesOfField(): BaseComponent[] {
     this.fieldLines = [];
-    for (let i = 0; i < SettingsServise.countOfLines; i += 1) {
+    for (let i = 0; i < SettingsService.countOfLines; i += 1) {
       const line = new BaseComponent(
         {
           tagName: 'div',
@@ -181,7 +161,7 @@ export default class GamePage extends BaseComponent {
         },
         ...this.generateTilesOfLine(i),
       );
-      line.setAttribute('style', `height:${SettingsServise.heigthOfLine}px`);
+      line.setAttribute('style', `height:${SettingsService.heigthOfLine}px`);
       this.fieldLines.push(line);
     }
     return this.fieldLines;
@@ -189,7 +169,7 @@ export default class GamePage extends BaseComponent {
 
   private generateTilesOfLine(index: number): BaseComponent[] {
     const fieldTilesOfLine: BaseComponent[] = [];
-    for (let i = 0; i < SettingsServise.numWordsInPhrase(index); i += 1) {
+    for (let i = 0; i < SettingsService.numWordsInPhrase(index); i += 1) {
       const tile = new BaseComponent({
         tagName: 'div',
         className: 'tile-card empty-card',
@@ -202,7 +182,7 @@ export default class GamePage extends BaseComponent {
     return fieldTilesOfLine;
   }
 
-  private createButtonContinue(): BaseComponent {
+  private createButtonContinue(): Button {
     return new Button({
       className: 'form-button game-button hide',
       textContent: 'Continue',
@@ -213,7 +193,7 @@ export default class GamePage extends BaseComponent {
     });
   }
 
-  private createButtonCheck(): BaseComponent {
+  private createCheckButton(): Button {
     return new Button({
       className: 'form-button game-button hide',
       textContent: 'Check',
@@ -224,7 +204,7 @@ export default class GamePage extends BaseComponent {
     });
   }
 
-  private createButtonAutofill(): BaseComponent {
+  private createButtonAutofill(): Button {
     return new Button({
       className: 'form-button game-button game-button-autofill',
       textContent: "I don't no ;(",
@@ -239,7 +219,7 @@ export default class GamePage extends BaseComponent {
     return new BaseComponent({
       tagName: 'span',
       className: 'text-hint',
-      textContent: SettingsServise.textHint(SettingsServise.currentIndexPhrase),
+      textContent: SettingsService.textHint(SettingsService.currentIndexPhrase),
     });
   };
 
@@ -272,7 +252,7 @@ export default class GamePage extends BaseComponent {
       ),
       this.textHint,
     );
-    if (!LocalStorageServise.getHints('translate_hint')) {
+    if (!LocalStorageService.getHints('translate_hint')) {
       hintLine.removeClass('show');
     }
     return hintLine;
@@ -297,7 +277,7 @@ export default class GamePage extends BaseComponent {
 
   public clickPuzzle = (element: HTMLElement): void => {
     const card = element.children[0];
-    const arrayTiles: HTMLCollection = this.fieldLines[SettingsServise.currentIndexPhrase].getNode().children;
+    const arrayTiles: HTMLCollection = this.fieldLines[SettingsService.currentIndexPhrase].getNode().children;
     if (card) {
       for (let i = 0; i < arrayTiles.length; i += 1) {
         if (arrayTiles[i].classList.contains('empty-card')) {
@@ -305,7 +285,7 @@ export default class GamePage extends BaseComponent {
           if (card instanceof HTMLElement) {
             arrayTiles[i].setAttribute(
               'style',
-              `z-index: ${SettingsServise.numWordsInPhrase(SettingsServise.currentIndexPhrase) * this.zIndexCoefficient - this.zIndexCoefficient * i};
+              `z-index: ${SettingsService.numWordsInPhrase(SettingsService.currentIndexPhrase) * this.zIndexCoefficient - this.zIndexCoefficient * i};
             width: ${card.style.width}, height: ${card.style.height}`,
             );
           }
@@ -320,20 +300,20 @@ export default class GamePage extends BaseComponent {
   };
 
   public checkPhraseFull(): void {
-    const arrayTiles: HTMLCollection = this.fieldLines[SettingsServise.currentIndexPhrase].getNode().children;
+    const arrayTiles: HTMLCollection = this.fieldLines[SettingsService.currentIndexPhrase].getNode().children;
     let countWords = 0;
     for (let i = 0; i < arrayTiles.length; i += 1) {
       if (arrayTiles[i].textContent) {
         countWords += 1;
       }
     }
-    if (countWords === SettingsServise.numWordsInPhrase(SettingsServise.currentIndexPhrase)) {
+    if (countWords === SettingsService.numWordsInPhrase(SettingsService.currentIndexPhrase)) {
       this.buttonCheck.removeClass('hide');
     }
   }
 
   public checkRightPhrase(): void {
-    const arrayTiles: HTMLCollection = this.fieldLines[SettingsServise.currentIndexPhrase].getNode().children;
+    const arrayTiles: HTMLCollection = this.fieldLines[SettingsService.currentIndexPhrase].getNode().children;
     let resultPhrase = '';
     let error = false;
     for (let i = 0; i < arrayTiles.length; i += 1) {
@@ -348,17 +328,17 @@ export default class GamePage extends BaseComponent {
       }
     }
     resultPhrase.trim();
-    if (resultPhrase.trim() === SettingsServise.currentPhrase(SettingsServise.currentIndexPhrase) && !error) {
-      if (SettingsServise.currentIndexPhrase === SettingsServise.countOfLines - 1) {
+    if (resultPhrase.trim() === SettingsService.currentPhrase(SettingsService.currentIndexPhrase) && !error) {
+      if (SettingsService.currentIndexPhrase === SettingsService.countOfLines - 1) {
         this.showFullPicture();
       }
       this.buttonContinue.removeClass('hide');
       this.buttonCheck.addClass('hide');
-      this.fieldLines[SettingsServise.currentIndexPhrase].addClass('block');
-      if (!SettingsServise.hints.translate) {
+      this.fieldLines[SettingsService.currentIndexPhrase].addClass('block');
+      if (!SettingsService.hints.translate) {
         this.textHint?.addClass('show');
       }
-      if (!SettingsServise.hints.audio) {
+      if (!SettingsService.hints.audio) {
         this.headerPage.toolbarSound.addClass('show');
       }
     }
@@ -367,14 +347,14 @@ export default class GamePage extends BaseComponent {
   public moveToNextRound(): void {
     this.buttonAutofill.removeClass('hide');
     this.textHint?.removeClass('show');
-    if (!SettingsServise.hints.audio) {
+    if (!SettingsService.hints.audio) {
       this.headerPage.toolbarSound.removeClass('show');
     }
 
-    if (SettingsServise.currentIndexPhrase === SettingsServise.countOfLines - 1) {
+    if (SettingsService.currentIndexPhrase === SettingsService.countOfLines - 1) {
       this.moveToNextPicture();
     } else {
-      SettingsServise.currentIndexPhrase += 1;
+      SettingsService.currentIndexPhrase += 1;
       if (this.gameLine) {
         this.gameLine.getChildren().forEach((element) => {
           if (element.getNode().classList.contains('show-empty-card')) {
@@ -383,11 +363,11 @@ export default class GamePage extends BaseComponent {
         });
         this.gameLine.setHTML('');
         this.textHint?.destroyChildren();
-        SettingsServise.moveXCurrentPosition = 0;
-        SettingsServise.moveXPositions = [];
-        SettingsServise.moveYCurrentPosition = 0;
-        SettingsServise.moveYPositions = [];
-        SettingsServise.positionsCards();
+        SettingsService.moveXCurrentPosition = 0;
+        SettingsService.moveXPositions = [];
+        SettingsService.moveYCurrentPosition = 0;
+        SettingsService.moveYPositions = [];
+        SettingsService.positionsCards();
         this.generatePuzzles();
         this.inputPuzzles();
         this.textHint?.append(this.createHintTranslateText());
@@ -398,25 +378,22 @@ export default class GamePage extends BaseComponent {
   }
 
   public moveToNextPicture(): void {
-    SettingsServise.currentIndexPhrase = 0;
-    SettingsServise.currentIndexPicture += 1;
+    SettingsService.currentIndexPhrase = 0;
+    SettingsService.currentIndexPicture += 1;
     this.destroyChildren();
     this.fieldPicture.destroyChildren();
-    SettingsServise.moveXCurrentPosition = 0;
-    SettingsServise.moveXPositions = [];
-    SettingsServise.moveYCurrentPosition = 0;
-    SettingsServise.moveYPositions = [];
-    SettingsServise.positionsCards();
-    SettingsServise.setMainPicture();
+    SettingsService.moveXCurrentPosition = 0;
+    SettingsService.moveXPositions = [];
+    SettingsService.moveYCurrentPosition = 0;
+    SettingsService.moveYPositions = [];
+    SettingsService.positionsCards();
+    SettingsService.setMainPicture();
     this.buttonContinue.addClass('hide');
     this.buttonCheck.addClass('hide');
     this.buttonAutofill.removeClass('hide');
 
     this.fieldPicture = this.createFieldPicture();
-    // this.fieldPicture.setAttribute(
-    //   'style',
-    //   `background-image: url(src/app/data/images/${SettingsServise.currentMainPicture()})`,
-    // );
+
     this.buttonWrapper = new BaseComponent(
       {
         tagName: 'div',
@@ -428,7 +405,7 @@ export default class GamePage extends BaseComponent {
     );
     this.linePuzzles = this.createLinePuzzles();
     this.hintLine = this.createLineHint();
-    this.headerPage = new Header(this.changeHintTranslate, this.changeHintsBackground);
+    this.headerPage = new Header(this.changeHintTranslate);
     this.generatePuzzles();
     this.inputPuzzles();
     this.appendChildren([
@@ -437,12 +414,12 @@ export default class GamePage extends BaseComponent {
       this.hintLine,
       this.linePuzzles,
       this.buttonWrapper,
-      new Logout(),
+      new LogoutButton(),
     ]);
   }
 
   public autofillCards(): void {
-    const arrayTiles: HTMLCollection = this.fieldLines[SettingsServise.currentIndexPhrase].getNode().children;
+    const arrayTiles: HTMLCollection = this.fieldLines[SettingsService.currentIndexPhrase].getNode().children;
     const arrayPuzzles: BaseComponent[] | undefined = this.gameLine?.getChildren();
     if (arrayPuzzles) {
       arrayPuzzles
@@ -451,7 +428,7 @@ export default class GamePage extends BaseComponent {
         .forEach((item, index) => {
           arrayTiles[index].setAttribute(
             'style',
-            `z-index: ${SettingsServise.numWordsInPhrase(SettingsServise.currentIndexPhrase) * 10 - 10 * index}; width: ${item.style.width}; height: ${item.style.height}`,
+            `z-index: ${SettingsService.numWordsInPhrase(SettingsService.currentIndexPhrase) * 10 - 10 * index}; width: ${item.style.width}; height: ${item.style.height}`,
           );
           arrayTiles[index].setAttribute('border', `none`);
           if (item.parentNode instanceof HTMLElement) {
@@ -469,11 +446,7 @@ export default class GamePage extends BaseComponent {
     this.fieldLines.forEach((item) => {
       item.addClass('opacity');
     });
-    this.fieldPicture.setAttribute(
-      'style',
-      `background-image: url(https://raw.githubusercontent.com/rolling-scopes-school/rss-puzzle-data/main/images/${SettingsServise.mainPicture})`,
-    );
-    console.log(SettingsServise.currentIndexPicture);
+    this.fieldPicture.setAttribute('style', `background-image: url(${MAIN_PATH}${SettingsService.mainPicture})`);
     this.dopinfo?.destroyChildren();
     this.dopinfo?.append(this.createInfoPicture());
     this.dopinfo?.addClass('show');

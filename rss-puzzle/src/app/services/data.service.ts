@@ -1,5 +1,5 @@
-import type { IGameRound } from '../interfaces.ts/gameRound';
-import type { IRound } from '../interfaces.ts/round';
+import type { IGameRound } from '../interfaces/gameRound';
+import type { IRound } from '../interfaces/round';
 
 const dataRoundOneLevel: unknown = await import('../data/wordCollectionLevel1.json');
 const dataRoundTwoLevel: unknown = await import('../data/wordCollectionLevel2.json');
@@ -15,12 +15,12 @@ class Data {
   // eslint-disable-next-line
   public dataRounds(level: number): IRound[] {
     if (
-      Data.isData(dataRoundOneLevel) &&
-      Data.isData(dataRoundTwoLevel) &&
-      Data.isData(dataRoundThreeLevel) &&
-      Data.isData(dataRoundFourLevel) &&
-      Data.isData(dataRoundFiveLevel) &&
-      Data.isData(dataRoundSixLevel)
+      this.isData(dataRoundOneLevel) &&
+      this.isData(dataRoundTwoLevel) &&
+      this.isData(dataRoundThreeLevel) &&
+      this.isData(dataRoundFourLevel) &&
+      this.isData(dataRoundFiveLevel) &&
+      this.isData(dataRoundSixLevel)
     ) {
       switch (level) {
         case 1: {
@@ -66,8 +66,8 @@ class Data {
     return this.roundsCount;
   }
 
-  private static isData(value: unknown): value is IGameRound {
+  private isData(value: unknown): value is IGameRound {
     return value !== null && value !== undefined;
   }
 }
-export const DataServise = new Data();
+export const DataService = new Data();

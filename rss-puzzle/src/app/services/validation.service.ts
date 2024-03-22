@@ -1,4 +1,4 @@
-import type { StatusError } from '../types/types';
+import type { StatusErrorValidation } from '../interfaces/types';
 
 class Validation {
   private patternInput = '^[A-Z][\\-a-zA-z]+$';
@@ -8,7 +8,7 @@ class Validation {
     ['Surname', 4],
   ]);
 
-  public isValidField(target: HTMLInputElement): StatusError {
+  public isValidField(target: HTMLInputElement): StatusErrorValidation {
     if (
       !(
         this.isNotEmpty(target.value) &&
